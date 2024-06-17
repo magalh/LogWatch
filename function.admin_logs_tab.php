@@ -19,7 +19,6 @@ $message = null;
 try{
 
     $logfilepath = $this->GetPreference('logfilepath');
-    $tpl->assign('logfilepath',$logfilepath);
 
     // Debugging output
     if (!file_exists($logfilepath)) {
@@ -30,7 +29,8 @@ try{
     }
 
     // Read the log file and parse the contents
-    $logs = parseLogFile($logfilepath);
+    $logQuery = new LogQuery($logfilepath);
+    $logs = $logQuery->parseLogFile();
 
     $matchcount = count($logs);
     $pagelimit = 10; // Define your page limit
@@ -50,29 +50,8 @@ try{
     $message = $e->getMessage();
 }
 
-
+$tpl->assign('logfilepath',$logfilepath);
 $tpl->assign('message',$message);
 $tpl->assign('error',$error);
 $tpl->assign('logs',$logs);
 $tpl->display();
-
-function parseLogFile($logfilepath)
-{
-    $logs = [];
-    $file = fopen($logfilepath, 'r');
-    if ($file) {
-        while (($line = fgets($file)) !== false) {
-            if (preg_match('/\[(.*?)\] \[php:(.*?)\] \[pid (\d+)\] \[client (.*?)\] (.*?) in (.*?) on line (\d+)/', $line, $matches)) {
-                $logs[] = (object)[
-                    'created' => $matches[1],
-                    'type' => $matches[2],
-                    'description' => $matches[5],
-                    'file' => $matches[6],
-                    'line' => $matches[7],
-                ];
-            }
-        }
-        fclose($file);
-    }
-    return $logs;
-}

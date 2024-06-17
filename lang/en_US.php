@@ -1,5 +1,5 @@
 <?php
-$lang['friendlyname'] = 'CMSMS Logs';
+$lang['friendlyname'] = 'LogWatch';
 $lang['admindescription'] = 'A module for retrieving Logs data';
 $lang['ask_uninstall'] = 'Are you sure you want to uninstall the LogWatch module?';
 $lang['VALIDATION_ERROR'] = 'Please provide your Log File path';
