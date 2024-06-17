@@ -15,6 +15,7 @@ class LogQuery
         $logs = [];
         $file = fopen($this->logfilepath, 'r');
         if ($file) {
+            $i = 0;
             while (($line = fgets($file)) !== false) {
                 if (preg_match('/\[(.*?)\] \[php:(.*?)\] \[pid (\d+)\] \[client (.*?)\] (.*?) in (.*?) on line (\d+)/', $line, $matches)) {
                     
@@ -23,6 +24,7 @@ class LogQuery
                     $stackTrace = $this->extractStackTrace($line);
                     
                     $logs[] = (object)[
+                        'row' => $i++,
                         'created' => $matches[1],
                         'type' => $matches[2],
                         'description' => $description,

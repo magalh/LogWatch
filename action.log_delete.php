@@ -2,10 +2,17 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 
-if( isset($params['hid']) && $params['hid'] > 1) {
-   $log = LogItem::load_by_id((int)$params['hid']);
-   $log->delete();
-   $this->SetMessage($this->Lang('log_deleted'));
+if (isset($params['hid'])) {
+   $lineNumber = (int)$params['hid'];
+   $logFilePath = $this->GetPreference('logfilepath');
+   $logFile = new LogFile($logFilePath);
+   $success = $logFile->removeLine($lineNumber);
+   if ($success) {
+       $this->SetMessage($this->Lang('log_line_deleted'));
+   } else {
+      $error = $logFile->getLastError();
+      $this->SetMessage($error, 'error');
+   }
    $this->RedirectToAdminTab();
 }
 ?>

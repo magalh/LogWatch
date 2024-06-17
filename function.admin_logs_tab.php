@@ -22,10 +22,13 @@ try{
 
     // Debugging output
     if (!file_exists($logfilepath)) {
-        throw new LogicException('Log file does not exist: ' . $logfilepath);
+        throw new LogicException($this->Lang('log_file_does_not_exist',$logfilepath));
     }
     if (!is_readable($logfilepath)) {
-        throw new LogicException('Log file is not readable: ' . $logfilepath);
+        throw new LogicException($this->Lang('log_file_is_not_readable',$logfilepath));
+    }
+    if (!is_writable($logfilepath)) {
+        throw new LogicException($this->Lang('log_file_is_not_writable',$logfilepath));
     }
 
     // Read the log file and parse the contents

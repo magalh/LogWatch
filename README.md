@@ -28,7 +28,7 @@ This means the file is readable by everyone (<code>rw-r--r--</code>).</p>
 
 <h3>Q3: How do I change the permissions of my log file to make it readable?</h3>
 <p>Use the <code>chmod</code> command to change the permissions of the log file. To make the file readable by all users, run:
-<pre><code>sudo chmod 644 /var/log/apache2/cmsms.com.error.log</code></pre><br></p>
+<pre><code>sudo chmod 666 /var/log/apache2/cmsms.com.error.log</code></pre><br></p>
 
 <h3>Q4: How do I check the permissions of the directory containing my log file?</h3>
 <p>Use the <code>ls -ld</code> command to check the permissions of the directory:
