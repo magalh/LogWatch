@@ -22,10 +22,16 @@ class LogQuery
                     $description = $matches[5];
                     $filePath = $this->extractFilePath($matches[6]);
                     $stackTrace = $this->extractStackTrace($line);
+
+                    $date = DateTime::createFromFormat('D M d H:i:s.u Y', $matches[1]);
+                    if ($date === false) {
+                        // Handle potential date parsing errors
+                        continue;
+                    }
                     
                     $logs[] = (object)[
                         'row' => $i++,
-                        'created' => $matches[1],
+                        'created' => $date->getTimestamp(),
                         'type' => $matches[2],
                         'description' => $description,
                         'file' => $filePath,
@@ -36,6 +42,11 @@ class LogQuery
                 }
             }
             fclose($file);
+
+            usort($logs, function($a, $b) {
+                return $b->created - $a->created;
+            });
+
         }
         return $logs;
     }
@@ -76,6 +87,8 @@ class LogQuery
                 $icon = $themeObject->DisplayImage('icons/system/warning.gif', 'warning', '', '', 'systemicon');
                 break;
             case 'INFO':
+                case 'notice':
+                    case 'depricated':
                 $icon = $themeObject->DisplayImage('icons/system/info.gif', 'info', '', '', 'systemicon');
                 break;
             case 'ERROR':

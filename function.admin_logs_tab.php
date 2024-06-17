@@ -30,7 +30,7 @@ $logQuery = new LogQuery($logfilepath);
 $logs = $logQuery->parseLogFile();
 
 $matchcount = count($logs);
-$pagelimit = 10;
+$pagelimit = 25;
 if( isset( $params['pagenumber'] ) && $params['pagenumber'] !== '' ) {
     $pagenumber = (int)$params['pagenumber'];
     $startelement = ($pagenumber-1) * $pagelimit;

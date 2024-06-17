@@ -5,7 +5,7 @@
 
 <div class="row c_full">
   <div class="pageoptions grid_6" style="margin-top: 8px;">
-    <a id="toggle_filter" {if $curcategory != ''} style="font-weight: bold; color: green;"{/if}>{admin_icon icon='view.gif' alt=$mod->Lang('viewfilter')} {if $curcategory != ''}*{/if}
+    <a id="toggle_filter" {if $curcategory != ''} style="font-weight: bold; color: green;"{/if}>{admin_icon icon='view.gif' alt="Coming Soon"} {if $curcategory != ''}*{/if}
     {$mod->Lang('viewfilter')}</a>
   </div>
   {if $total_items > 0 && $total_pages > 1}
@@ -21,14 +21,14 @@
   {/if}
 </div>
 
-    <table class="pagetable cms_sortable tablesorter">
+  <table class="pagetable cms_sortable tablesorter">
     <thead>
     <tr>
     <th></th>
     <th>{$mod->Lang('date')}</th>
     <th>{$mod->Lang('type')}</th>
     <th>{$mod->Lang('message')}</th>
-    <th>{$mod->Lang('type_Detail')}</th>
+    <th></th>
     <th></th>
     </tr>
     </thead>
@@ -36,11 +36,10 @@
     {foreach $logs as $log}
     <tr class="{cycle values='row1,row2'}">
     <td>{$log->row}</td>
-    <td>{$log->created}</td>
+    <td>{$log->created|cms_date_format}</td>
     <td>{$log->icon}</td>
-    <td class="word-wrap"><strong>{$log->description}</strong><br><br>{$log->file}<br>line# {$log->line}</td>
-    <td>
-    <pre>{if $log->stack_trace !== ''}<small>{$log->stack_trace}</small>{/if}</pre>
+    <td class="word-wrap"><strong>{$log->description}</strong><br>{$log->file}<br>line# {$log->line}</td>
+    <td><button type="button" class="view-stack-trace" data-stack-trace="{$log->stack_trace}">View</button>
     </td>
     <td><a class="del_log" href="{cms_action_url action=log_delete hid=$log->row}" title="{$mod->Lang('delete')}">{admin_icon icon='delete.gif'}</a></td>
     </tr>
@@ -73,3 +72,30 @@
         white-space: normal;
     }
 </style>
+
+
+<!-- Modal -->
+<div id="logStackTraceDialog" title="Stack Trace" style="display:none;">
+  <pre id="logStackTraceContent"></pre>
+</div>
+
+
+
+<script>
+  $(document).ready(function() {
+    $('.view-stack-trace').on('click', function() {
+      var stackTrace = $(this).data('stack-trace');
+      stackTrace = stackTrace.replace(/<br\s*\/?>/gi, '\n');
+      $('#logStackTraceContent').text(stackTrace);
+      $('#logStackTraceDialog').dialog({
+        modal: true,
+        width: 600,
+        buttons: {
+          "Close": function() {
+            $(this).dialog("close");
+          }
+        }
+      });
+    });
+  });
+</script>

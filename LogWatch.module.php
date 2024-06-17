@@ -3,7 +3,7 @@ class LogWatch extends CMSModule
 {
 	const MANAGE_PERM = 'manage_LogWatch';
 	
-	public function GetVersion() { return '1.0'; }
+	public function GetVersion() { return '0.0.1'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return false; }
