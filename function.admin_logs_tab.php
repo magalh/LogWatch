@@ -3,19 +3,6 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 
-$startelement = 0;
-$pagenum = 1;
-$agelimit = -1;
-$pagelimit = 10000;
-$thispage = 1;
-
-if ( isset($params['pagenum']) ) $thispage = (int)$params['pagenum'];
-
-$tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_logs_tab.tpl'),null,null,$smarty);
-
-$error = null;
-$message = null;
-
 try{
 
     $logfilepath = $this->GetPreference('logfilepath');
@@ -31,30 +18,39 @@ try{
         throw new LogicException($this->Lang('log_file_is_not_writable',$logfilepath));
     }
 
-    // Read the log file and parse the contents
-    $logQuery = new LogQuery($logfilepath);
-    $logs = $logQuery->parseLogFile();
-
-    $matchcount = count($logs);
-    $pagelimit = 10; // Define your page limit
-    $thispage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-
-    // Calculate page variables
-    $npages = (int)($matchcount / $pagelimit);
-    if ($matchcount % $pagelimit > 0) $npages++;
-    $startoffset = ($thispage - 1) * $pagelimit;
-
-    // Slice logs to display only the current page logs
-    $logs = array_slice($logs, $startoffset, $pagelimit);
-
-
 } catch (LogicException $e) {
     $error = 1;	
     $message = $e->getMessage();
 }
 
+$tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_logs_tab.tpl'),null,null,$smarty);
+
+// Read the log file and parse the contents
+$logQuery = new LogQuery($logfilepath);
+$logs = $logQuery->parseLogFile();
+
+$matchcount = count($logs);
+$pagelimit = 10;
+if( isset( $params['pagenumber'] ) && $params['pagenumber'] !== '' ) {
+    $pagenumber = (int)$params['pagenumber'];
+    $startelement = ($pagenumber-1) * $pagelimit;
+  }
+
+// Calculate page variables
+$npages = (int)($matchcount / $pagelimit);
+if ($matchcount % $pagelimit > 0) $npages++;
+$startelement = ($pagenumber - 1) * $pagelimit;
+
+// Slice logs to display only the current page logs
+$logs = array_slice($logs, $startelement, $pagelimit);
+
 $tpl->assign('logfilepath',$logfilepath);
 $tpl->assign('message',$message);
 $tpl->assign('error',$error);
 $tpl->assign('logs',$logs);
+$tpl->assign('startelement', $startelement);
+$tpl->assign('pagenumber', $pagenumber);
+$tpl->assign('total_items', $matchcount);
+$tpl->assign('total_pages', $npages);
+
 $tpl->display();

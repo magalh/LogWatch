@@ -29,6 +29,12 @@ $lang['log_line_deleted'] = 'Log line deleted successfully';
 $lang['log_file_does_not_exist'] = '%s does not exist';
 $lang['log_file_is_not_readable'] = 'Log file is not readable<br>Try running #sudo chmod 666 %s';
 $lang['log_file_is_not_writable'] = 'Log file is not writable<br>Try running #sudo chmod 666 %s';
-
-
+$lang['page'] = 'Page';
+$lang['nextpage'] = '&gt;';
+$lang['prompt_go'] = 'Go';
+$lang['prevpage'] = '&lt;';
+$lang['prompt_of'] = 'of';
+$lang['prompt_page'] = 'Page';
+$lang['prompt_pagelimit'] = 'Page Limit';
+$lang['viewfilter'] = 'View Filter';
 ?>
