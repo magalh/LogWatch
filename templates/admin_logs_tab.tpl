@@ -5,8 +5,11 @@
 
 <div class="row c_full">
   <div class="pageoptions grid_6" style="margin-top: 8px;">
-    <a id="toggle_filter" {if $curcategory != ''} style="font-weight: bold; color: green;"{/if}>{admin_icon icon='view.gif' alt="Coming Soon"} {if $curcategory != ''}*{/if}
-    {$mod->Lang('viewfilter')}</a>
+    {*<a id="toggle_filter" {if $curcategory != ''} style="font-weight: bold; color: green;"{/if}>{admin_icon icon='view.gif' alt="Coming Soon"} {if $curcategory != ''}*{/if}
+    {$mod->Lang('viewfilter')}</a>*}
+
+    <a href="{cms_action_url action=defaultadmin}">{admin_icon icon='newobject.gif'} {$mod->Lang('refresh')}</a>
+    
   </div>
   {if $total_items > 0 && $total_pages > 1}
     <div class="pageoptions grid_6" style="text-align: right;">
@@ -38,8 +41,13 @@
     <td>{$log->row}</td>
     <td>{$log->created|cms_date_format}</td>
     <td>{$log->icon}</td>
-    <td class="word-wrap"><strong>{$log->description}</strong><br>{$log->file}<br>line# {$log->line}</td>
-    <td><button type="button" class="view-stack-trace" data-stack-trace="{$log->stack_trace}">View</button>
+    <td class="word-wrap">
+      <strong>{$log->description}</strong>
+      {if $log->file}<br>{$log->file}{/if}
+      {if $log->line}<br>line# {$log->line}{/if}
+    </td>
+    <td>
+    {if $log->stack_trace}<button type="button" class="view-stack-trace" data-stack-trace="{$log->stack_trace}">View</button>{/if}
     </td>
     <td><a class="del_log" href="{cms_action_url action=log_delete hid=$log->row}" title="{$mod->Lang('delete')}">{admin_icon icon='delete.gif'}</a></td>
     </tr>

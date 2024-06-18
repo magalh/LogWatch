@@ -37,4 +37,5 @@ $lang['prompt_of'] = 'of';
 $lang['prompt_page'] = 'Page';
 $lang['prompt_pagelimit'] = 'Page Limit';
 $lang['viewfilter'] = 'View Filter';
+$lang['refresh'] = 'Refresh';
 ?>

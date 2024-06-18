@@ -3,10 +3,17 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 
+$error = 0;
+$message = '';
+
 try{
 
-    $logfilepath = $this->GetPreference('logfilepath');
+    // Debugging output
+    if (!isset($logfilepath) || empty($logfilepath)) {
+        throw new LogicException('Log file path is not defined.');
+    }
 
+    $logfilepath = preg_replace('/[^\PC\s]/u', '', $logfilepath);
     // Debugging output
     if (!file_exists($logfilepath)) {
         throw new LogicException($this->Lang('log_file_does_not_exist',$logfilepath));
@@ -25,16 +32,21 @@ try{
 
 $tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_logs_tab.tpl'),null,null,$smarty);
 
-// Read the log file and parse the contents
-$logQuery = new LogQuery($logfilepath);
-$logs = $logQuery->parseLogFile();
+$logs = [];
+if ($error === 0) {
+    $logQuery = new LogQuery($logfilepath);
+    $logs = $logQuery->parseLogFile();
+}
 
 $matchcount = count($logs);
 $pagelimit = 25;
+$pagenumber = 1;
+
 if( isset( $params['pagenumber'] ) && $params['pagenumber'] !== '' ) {
-    $pagenumber = (int)$params['pagenumber'];
-    $startelement = ($pagenumber-1) * $pagelimit;
+    $pagenumber = (int)$params['pagenumber']; 
   }
+
+$startelement = ($pagenumber-1) * $pagelimit;
 
 // Calculate page variables
 $npages = (int)($matchcount / $pagelimit);

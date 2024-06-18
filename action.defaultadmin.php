@@ -2,6 +2,8 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 
+$logfilepath = $this->GetPreference('logfilepath');
+
 echo $this->StartTabHeaders();
 	echo $this->SetTabHeader('logs', "Logs");
 	echo $this->SetTabHeader('settings',"Settings");
