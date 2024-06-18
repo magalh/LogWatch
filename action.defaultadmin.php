@@ -2,7 +2,8 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 
-$logfilepath = $this->GetPreference('logfilepath');
+$logger = new LogIt;
+//$logger->triggerPhpErrors(5);
 
 echo $this->StartTabHeaders();
 	echo $this->SetTabHeader('logs', "Logs");

@@ -6,7 +6,7 @@ class LogWatch extends CMSModule
 	public function GetVersion() { return '0.0.1'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
-	public function IsPluginModule() { return false; }
+	public function IsPluginModule() { return true;}
 	public function HasAdmin() { return TRUE; }
 	public function VisibleToAdminUser() { return $this->CheckPermission(self::MANAGE_PERM); }
 	public function GetAuthor() { return 'Magal Hezi'; }
@@ -17,6 +17,21 @@ class LogWatch extends CMSModule
 	 public function InitializeAdmin() {
 		 $this->SetParameters();
 	 }
+
+	 public function InitializeFrontend() {
+		$this->RegisterModulePlugin();
+	 }
+
+	 public function __construct(){
+
+		$config = \cms_config::get_instance();
+        $smarty = \CmsApp::get_instance()->GetSmarty();
+        if( !$smarty ) return;
+
+		$plugins_dir = cms_join_path( $this->GetModulePath(), 'lib', 'plugins' );
+		$smarty->addPluginsDir($plugins_dir);
+
+    }
 	
 	public function GetHelp() { return @file_get_contents(__DIR__.'/README.md'); }
 	public function GetChangeLog() { return @file_get_contents(__DIR__.'/doc/changelog.inc'); }

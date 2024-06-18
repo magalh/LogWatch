@@ -27,7 +27,6 @@
   <table class="pagetable cms_sortable tablesorter">
     <thead>
     <tr>
-    <th></th>
     <th>{$mod->Lang('date')}</th>
     <th>{$mod->Lang('type')}</th>
     <th>{$mod->Lang('message')}</th>
@@ -38,12 +37,11 @@
     <tbody>
     {foreach $logs as $log}
     <tr class="{cycle values='row1,row2'}">
-    <td>{$log->row}</td>
     <td>{$log->created|cms_date_format}</td>
-    <td>{$log->icon}</td>
+    <td>{$log->type|typeicon}</td>
     <td class="word-wrap">
       <strong>{$log->description}</strong>
-      {if $log->file}<br>{$log->file}{/if}
+      {if $log->file}<br>{$log->file|noroot}{/if}
       {if $log->line}<br>line# {$log->line}{/if}
     </td>
     <td>
@@ -107,3 +105,5 @@
     });
   });
 </script>
+
+{get_template_vars}

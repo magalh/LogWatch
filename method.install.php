@@ -2,20 +2,19 @@
 if( !defined('CMS_VERSION') ) exit;
 $this->CreatePermission(LogWatch::MANAGE_PERM,'Manage LogWatch');
 
-try{
-
-    $logfilepath = ini_get('error_log');
-    if (!$logfilepath) {
-        $this->SetPreference('logfilepath','/var/log/apache2/error.log');
-        throw new LogicException('Unable to determine the PHP error log file location.');
-    } else {
-        $this->SetPreference('logfilepath',$logfilepath);
-    }
-
-} catch (LogicException $e) {
-    $error = 1;	
-    $message = $e->getMessage();
-    audit('',$this->GetName(),$message);
-}
+$db = $this->GetDb();
+$dict = NewDataDictionary($db);
+$taboptarray = array('mysql' => 'TYPE=MyISAM');
+$flds = "
+ id I KEY AUTO,
+ name C(255),
+ type C(255),
+ description X,
+ file C(255),
+ line I,
+ created ".CMS_ADODB_DT."
+";
+$sqlarray = $dict->CreateTableSQL(CMS_DB_PREFIX.'module_logwatch',$flds,$taboptarray);
+$dict->ExecuteSQLArray($sqlarray);
 
 ?>
