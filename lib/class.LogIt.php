@@ -144,9 +144,6 @@ class LogIt
                 // Trigger PHP user notice
                 trigger_error('This is a user notice', E_USER_NOTICE);
                 break;
-            default:
-                echo 'Invalid error type specified.';
-                break;
         }
     }
 

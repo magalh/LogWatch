@@ -34,7 +34,6 @@ $exceptions = [
 $tpl = $smarty->CreateTemplate( $this->GetTemplateResource('admin_settings_tab.tpl'), null, null, $smarty );
 $tpl->assign('selected_logsettings', $selected_logsettings);
 $tpl->assign('exceptions', $exceptions);
-$tpl->assign('root_path',CMS_ROOT_PATH);
 $tpl->display();
 
 

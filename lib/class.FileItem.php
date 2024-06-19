@@ -60,8 +60,31 @@ class FileItem
             $this->stacktrace
         );
 
+        $filePath = LogWatch::LOGWATCH_FILE;
+        if ($this->lineExists($this->file, $this->line, $filePath)) {
+            $this->lastError = "A log line with the same file and line already exists.";
+            return FALSE;
+        }
+
         // Log the line
         $this->debug_to_log($logLine);
+        return TRUE;
+    }
+
+    private function lineExists($file, $line, $filePath)
+    {
+        if (!file_exists($filePath)) {
+            return FALSE;
+        }
+
+        $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $logLine) {
+            $logParts = explode('|', $logLine);
+            if (count($logParts) > 4 && $logParts[3] == $file && $logParts[4] == $line) {
+                return TRUE;
+            }
+        }
+        return FALSE;
     }
 
     public function is_valid()

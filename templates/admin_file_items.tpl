@@ -13,9 +13,6 @@
 
 <div class="row c_full">
   <div class="pageoptions grid_6" style="margin-top: 8px;">
-    {*<a id="toggle_filter" {if $curcategory != ''} style="font-weight: bold; color: green;"{/if}>{admin_icon icon='view.gif' alt="Coming Soon"} {if $curcategory != ''}*{/if}
-    {$mod->Lang('viewfilter')}</a>*}
-
     <a href="{cms_action_url action=defaultadmin}">{admin_icon icon='newobject.gif'} {$mod->Lang('refresh')}</a>
     
   </div>
@@ -35,7 +32,6 @@
   <table class="pagetable cms_sortable tablesorter">
     <thead>
     <tr>
-    <th></th>
     <th>{$mod->Lang('date')}</th>
     <th>{$mod->Lang('type')}</th>
     <th>{$mod->Lang('message')}</th>
@@ -46,7 +42,6 @@
     <tbody>
     {foreach $logs as $log}
     <tr class="{cycle values='row1,row2'}">
-    <td>{$log->row}</td>
     <td>{$log->created|cms_date_format}</td>
     <td>{$log->type|typeicon}</td>
     <td class="word-wrap">
@@ -101,7 +96,6 @@
       });
     });
   </script>
-
 
 {/if}
 {*get_template_vars*}

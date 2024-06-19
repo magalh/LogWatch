@@ -34,8 +34,6 @@ class FileQuery
 
     private function parseLogEntry($logline, $rowIndex)
     {
-        // Define regex patterns for different log formats
-        //2024-06-19 11:58:56|LogWatch|E_WARNING|/mnt/f/cmsms.com/public_html/modules/MapMarker/action.default.php|82|Undefined variable $map_lng|stacktrace
         $logPattern = '/^(?<created>[^|]+)\|(?<name>[^|]+)\|(?<type>[^|]+)\|(?<file>[^|]+)\|(?<line>\d+)\|(?<description>[^|]+)\|(?<stacktrace>.*)$/';
 
         if (preg_match($logPattern, $logline, $matches)) {
