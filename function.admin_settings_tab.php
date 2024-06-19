@@ -27,8 +27,7 @@ $exceptions = [
     'E_STRICT' => 'E_STRICT',
     'E_RECOVERABLE_ERROR' => 'E_RECOVERABLE_ERROR',
     'E_DEPRECATED' => 'E_DEPRECATED',
-    'E_USER_DEPRECATED' => 'E_USER_DEPRECATED',
-    'E_ALL' => 'E_ALL'
+    'E_USER_DEPRECATED' => 'E_USER_DEPRECATED'
 ];
 
 $tpl = $smarty->CreateTemplate( $this->GetTemplateResource('admin_settings_tab.tpl'), null, null, $smarty );

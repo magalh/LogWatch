@@ -18,8 +18,7 @@ class LogIt
         'E_STRICT' => E_STRICT,
         'E_RECOVERABLE_ERROR' => E_RECOVERABLE_ERROR,
         'E_DEPRECATED' => E_DEPRECATED,
-        'E_USER_DEPRECATED' => E_USER_DEPRECATED,
-        'E_ALL' => E_ALL
+        'E_USER_DEPRECATED' => E_USER_DEPRECATED
     ];
 
     public function __construct(){
@@ -54,17 +53,14 @@ class LogIt
 
     public function errorHandler ($errType, $errStr, $errFile, $errLine, $errContext = null) {
 
-        $mod = cms_utils::get_module('LogWatch');
-
         $type = array_search($errType, $this->exceptions) ?: 'UNKNOWN';
+        //$type = 'E_ERROR';
         $file = $errFile;
         $line = $errLine;
         $descriptionParts = $this->separateErrorDescription($errStr);
 
-        $mod = cms_utils::get_module('LogWatch');
-        
         $logitem = new FileItem();
-        $logitem->name = $mod->GetName();
+        $logitem->name = 'LogWatch';
         $logitem->type = $type;
         $logitem->file = $file;
         $logitem->line = $line;
@@ -96,7 +92,6 @@ class LogIt
     public function shutdownHandler()
     {
         $last_error = error_get_last();
-        
         if ($last_error && (
             $last_error['type'] == E_ERROR ||
             $last_error['type'] == E_PARSE ||

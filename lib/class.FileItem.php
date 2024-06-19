@@ -62,7 +62,8 @@ class FileItem
 
         $filePath = LogWatch::LOGWATCH_FILE;
         if ($this->lineExists($this->file, $this->line, $filePath)) {
-            $this->lastError = "A log line with the same file and line already exists.";
+            $this->lastError = "Already exists:".$this->file. " " .$this->line;
+            error_log($this->lastError,E_NOTICE);
             return FALSE;
         }
 
