@@ -4,7 +4,7 @@ class LogWatch extends CMSModule
 	const MANAGE_PERM = 'manage_LogWatch';
 	const LOGWATCH_FILE = TMP_CACHE_LOCATION . '/logwatch.log';
 	
-	public function GetVersion() { return '0.1.1'; }
+	public function GetVersion() { return '0.1.2'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return true;}
