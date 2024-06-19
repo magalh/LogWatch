@@ -12,7 +12,7 @@ echo $this->EndTabHeaders();
 
 echo $this->StartTabContent();
 	echo $this->StartTab('logs');
-	include(__DIR__.'/function.admin_logs_tab.php');
+	include(__DIR__.'/function.admin_file_items.php');
 	echo $this->EndTab();
 
 	echo $this->StartTab('settings');

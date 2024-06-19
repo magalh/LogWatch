@@ -6,7 +6,7 @@ if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 $error = 0;
 $message = '';
 
-$tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_logs_tab.tpl'),null,null,$smarty);
+$tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_file_items.tpl'),null,null,$smarty);
 
 $pagelimit = 50;
 $pagenumber = 1;
@@ -17,18 +17,19 @@ if (isset($params['pagenumber']) && $params['pagenumber'] !== '') {
 
 $offset = ($pagenumber - 1) * $pagelimit;
 
-$query = new LogQuery();
-$query->set_limit($pagelimit);
-$query->set_offset($offset);
-$logs = $query->GetMatches();
-$total_items = $query->_totalmatchingrows;
+$logs = [];
+$logQuery = new FileQuery();
+$logs = $logQuery->parseLogFile();
+$logs = array_slice($logs, $offset, $pagelimit);
+
+$total_items = count($logs);
 $total_pages = ceil($total_items / $pagelimit);
 
 $tpl->assign('message',$message);
 $tpl->assign('error',$error);
 $tpl->assign('logs',$logs);
 $tpl->assign('pagenumber', $pagenumber);
-$tpl->assign('total_items', $query->_totalmatchingrows);
+$tpl->assign('total_items', $total_items);
 $tpl->assign('total_pages', $total_pages);
 
 $tpl->display();

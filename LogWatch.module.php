@@ -2,8 +2,9 @@
 class LogWatch extends CMSModule
 {
 	const MANAGE_PERM = 'manage_LogWatch';
+	const LOGWATCH_FILE = TMP_CACHE_LOCATION . '/logwatch.log';
 	
-	public function GetVersion() { return '0.0.1'; }
+	public function GetVersion() { return '0.1.1'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return true;}
@@ -14,9 +15,9 @@ class LogWatch extends CMSModule
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
 	public function GetAdminSection() { return 'siteadmin'; }
 	
-	 public function InitializeAdmin() {
-		 $this->SetParameters();
-	 }
+	public function InitializeAdmin() {
+        $this->CreateParameter('hid',null,$this->Lang('param_hid'));
+    }
 
 	 public function InitializeFrontend() {
 		$this->RegisterModulePlugin();

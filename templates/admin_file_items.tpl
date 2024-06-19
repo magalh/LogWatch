@@ -3,6 +3,14 @@
 {else}
   {if !empty($logs)}
 
+  <style>
+      .word-wrap {
+          word-wrap: break-word;
+          word-break: break-all;
+          white-space: normal;
+      }
+  </style>
+
 <div class="row c_full">
   <div class="pageoptions grid_6" style="margin-top: 8px;">
     {*<a id="toggle_filter" {if $curcategory != ''} style="font-weight: bold; color: green;"{/if}>{admin_icon icon='view.gif' alt="Coming Soon"} {if $curcategory != ''}*{/if}
@@ -27,6 +35,7 @@
   <table class="pagetable cms_sortable tablesorter">
     <thead>
     <tr>
+    <th></th>
     <th>{$mod->Lang('date')}</th>
     <th>{$mod->Lang('type')}</th>
     <th>{$mod->Lang('message')}</th>
@@ -37,6 +46,7 @@
     <tbody>
     {foreach $logs as $log}
     <tr class="{cycle values='row1,row2'}">
+    <td>{$log->row}</td>
     <td>{$log->created|cms_date_format}</td>
     <td>{$log->type|typeicon}</td>
     <td class="word-wrap">
@@ -45,9 +55,9 @@
       {if $log->line}<br>line# {$log->line}{/if}
     </td>
     <td>
-    {if $log->stack_trace}<button type="button" class="view-stack-trace" data-stack-trace="{$log->stack_trace}">View</button>{/if}
+    {if $log->stacktrace}<button type="button" class="view-stack-trace" data-stacktrace="{$log->stacktrace}">View</button>{/if}
     </td>
-    <td><a class="del_log" href="{cms_action_url action=log_delete hid=$log->id}" title="{$mod->Lang('delete')}">{admin_icon icon='delete.gif'}</a></td>
+    <td><a class="del_log" href="{cms_action_url action=delete_line hid=$log->row}" title="{$mod->Lang('delete')}">{admin_icon icon='delete.gif'}</a></td>
     </tr>
     {/foreach}
     </tbody>
@@ -67,5 +77,31 @@
     </div>
   {/if}
 </div>
+
+  <!-- Modal -->
+  <div id="logStackTraceDialog" title="Stack Trace" style="display:none;">
+    <pre id="logStackTraceContent"></pre>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      $('.view-stack-trace').on('click', function() {
+        var stackTrace = $(this).data('stacktrace');
+        stackTrace = stackTrace.replace(/<br\s*\/?>/gi, '\n');
+        $('#logStackTraceContent').text(stackTrace);
+        $('#logStackTraceDialog').dialog({
+          modal: true,
+          width: 600,
+          buttons: {
+            "Close": function() {
+              $(this).dialog("close");
+            }
+          }
+        });
+      });
+    });
+  </script>
+
+
 {/if}
 {*get_template_vars*}
