@@ -39,4 +39,5 @@ $lang['prompt_pagelimit'] = 'Page Limit';
 $lang['viewfilter'] = 'View Filter';
 $lang['refresh'] = 'Refresh';
 $lang['logsettings'] = 'Log Settings';
+$lang['param_hid'] = 'This parameter accepts the integer id of a holiday to display';
 ?>
