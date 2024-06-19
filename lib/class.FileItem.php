@@ -61,7 +61,7 @@ class FileItem
         );
 
         $filePath = LogWatch::LOGWATCH_FILE;
-        if ($this->lineExists($this->file, $this->line, $filePath)) {
+        if ($this->lineExists($this->type, $this->file, $this->line, $filePath)) {
             $this->lastError = "Already exists:".$this->file. " " .$this->line;
             //error_log($this->lastError,E_NOTICE);
             return FALSE;
@@ -72,7 +72,7 @@ class FileItem
         return TRUE;
     }
 
-    private function lineExists($file, $line, $filePath)
+    private function lineExists($type, $file, $line, $filePath)
     {
         if (!file_exists($filePath)) {
             return FALSE;
@@ -81,7 +81,7 @@ class FileItem
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $logLine) {
             $logParts = explode('|', $logLine);
-            if (count($logParts) > 4 && $logParts[3] == $file && $logParts[4] == $line) {
+            if (count($logParts) > 5 && $logParts[2] == $type && $logParts[3] == $file && $logParts[4] == $line) {
                 return TRUE;
             }
         }
