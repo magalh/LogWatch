@@ -4,6 +4,7 @@ class LogIt
 
     private $error_levels;
     private $exceptions = [
+        'E_ALL' => E_ALL,
         'E_ERROR' => E_ERROR,
         'E_WARNING' => E_WARNING,
         'E_PARSE' => E_PARSE,
@@ -29,12 +30,13 @@ class LogIt
         ini_set('log_errors', 1);
         set_error_handler(array($this, 'errorHandler'), $this->error_levels);
         register_shutdown_function(array($this, 'shutdownHandler'));
+
     }
     
     private function set_error_levels()
     {
         $mod = cms_utils::get_module('LogWatch');
-        $logsettings = $mod->GetPreference('logsettings', 'E_ERROR,E_NOTICE,E_WARNING');
+        $logsettings = $mod->GetPreference('logsettings', 'E_ALL');
         $selected_logsettings = explode(',', $logsettings);
 
         $this->error_levels = 0;
@@ -54,7 +56,6 @@ class LogIt
     public function errorHandler ($errType, $errStr, $errFile, $errLine, $errContext = null) {
 
         $type = array_search($errType, $this->exceptions) ?: 'UNKNOWN';
-        //$type = 'E_ERROR';
         $file = $errFile;
         $line = $errLine;
         $descriptionParts = $this->separateErrorDescription($errStr);
@@ -102,12 +103,12 @@ class LogIt
         }
     }
 
-    public function triggerPhpErrors($errorType)
+    public static function triggerPhpErrors($errorType)
     {
         switch ($errorType) {
             case 1:
                 // Trigger PHP notice
-                $uninitialized_variable = $undefinedVariable; // This will trigger a notice: "Undefined variable"
+                $uninitialized_variable2 = $undefinedVariable2; // This will trigger a notice: "Undefined variable"
                 break;
             case 2:
                 // Trigger PHP Fatal error
@@ -134,6 +135,7 @@ class LogIt
             case 7:
                 // Trigger PHP user warning
                 trigger_error('This is a user warning', E_USER_WARNING);
+                
                 break;
             case 8:
                 // Trigger PHP user notice

@@ -1,3 +1,28 @@
+<script>
+    function toggleCheckboxes() {
+        var allCheckbox = document.querySelector('input[name="{$actionid}logsettings[]"][value="E_ALL"]');
+        var checkboxes = document.querySelectorAll('input[name="{$actionid}logsettings[]"]:not([value="E_ALL"])');
+
+        if (allCheckbox.checked) {
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = false;
+                    checkbox.disabled = true;
+                });
+            } else {
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.disabled = false;
+                });
+            }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var allCheckbox = document.querySelector('input[name="{$actionid}logsettings[]"][value="E_ALL"]');
+        allCheckbox.addEventListener('change', toggleCheckboxes);
+
+        toggleCheckboxes();
+    });
+</script>
+    
 <h3>Get started with LogWatch:</h3>
 {form_start}
 <div class="pageoverflow">
@@ -14,3 +39,4 @@
     </p>
 </div>
 {form_end}
+

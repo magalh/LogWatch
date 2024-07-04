@@ -13,6 +13,7 @@ $logsettings = $this->GetPreference('logsettings', '');
 $selected_logsettings = explode(',', $logsettings);
 
 $exceptions = [
+    'E_ALL' => 'E_ALL',
     'E_ERROR' => 'E_ERROR',
     'E_WARNING' => 'E_WARNING',
     'E_PARSE' => 'E_PARSE',

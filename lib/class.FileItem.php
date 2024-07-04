@@ -97,11 +97,9 @@ class FileItem
 
     private function debug_to_log($logLine)
     {
-        if ($filename == '') {
-            $filename = LogWatch::LOGWATCH_FILE;
-            $x = (is_file($filename)) ? @filemtime($filename) : time();
-            if ($x !== FALSE && $x < (time() - 24 * 3600)) unlink($filename);
-        }
+        $filename = LogWatch::LOGWATCH_FILE;
+        //$x = (is_file($filename)) ? @filemtime($filename) : time();
+        //if ($x !== FALSE && $x < (time() - 24 * 3600)) unlink($filename);
         error_log($logLine . "\n", 3, $filename);
     }
 
