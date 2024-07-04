@@ -1,5 +1,5 @@
 <h2>Introduction</h2>
-<p>The LogWatch module is designed to assist developers in troubleshooting PHP errors through a simple and user-friendly admin interface. This module allows you to specify the location of your PHP error log file, read the contents of the log, and display the errors in a more human-readable form within the CMS Made Simple admin panel. By providing an organized and accessible view of error logs, LogWatch helps developers quickly identify and resolve issues, improving the efficiency of the development process.</p>
+<p>The LogWatch module is designed to assist developers in troubleshooting PHP errors through a simple and user-friendly admin interface. This module allows you to capture and display PHP errors directly within the CMS Made Simple admin panel, presenting them in a more human-readable form. By providing an organized and accessible view of errors, LogWatch helps developers quickly identify and resolve issues, improving the efficiency of the development process.</p>
 
 <h3>Features</h3>
 <ul>
@@ -10,14 +10,12 @@
 </ul>
 
 <h3>Usage</h3>
-<p>To use the LogWatch module, simply add to your template the {LogWatch} tag. The module will then read and display the log entries in the admin interface, providing you with a clear and concise overview of any PHP errors that have occurred. This makes it easier to track down and fix issues, ensuring your CMS Made Simple site runs smoothly.</p>
-<pre><code>
-&lt;!doctype html&gt;
-{strip}
-{process_pagedata}
-<strong>{LogWatch}</strong>
-....
-</code></pre>
+<p>The LogWatch module will start logging PHP errors automatically upon installation. To begin capturing logs, simply navigate through your front-end site. The module will monitor and record any PHP errors that occur during your site’s operation.</p>
+<p>You have the flexibility to customize which events you want to log. This can be done by adjusting the settings in the LogWatch module. In the settings, you can specify the types of errors and events you want to track, ensuring that you only log relevant information.</p>
+
+<h3>Testing</h3>
+<p>For testing and debugging purposes, you might want to manually trigger some errors to see how the LogWatch module captures and displays them. To do this, you can use the {LogWatch} tag on any of your front-end pages. This tag will display a series of action buttons that allow you to trigger different types of PHP errors manually. These buttons are useful for verifying that the module is correctly logging errors and for testing various error handling scenarios.</p>
+<p>By providing a comprehensive and customizable error logging solution, the LogWatch module helps developers efficiently identify and resolve issues, improving the overall development and maintenance process.</p>
 
 <h3>Feedback/Support</h3>
 <p>This module does not include commercial support. However, there are a number of resources available to help you with it:</p>
