@@ -22,8 +22,15 @@ class LogIt
         'E_USER_DEPRECATED' => E_USER_DEPRECATED
     ];
 
+    private static $initialized = false;
+
     public function __construct(){
 
+        if (self::$initialized) {
+            return;
+        }
+        self::$initialized = true;
+        
         $this->set_error_levels();
 
         error_reporting(E_ALL);

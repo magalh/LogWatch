@@ -30,7 +30,7 @@
 </ul>
 
 <h3>Copyright and License</h3>
-<p>Copyright &copy; 2024, Magal Hezi <a href="mailto:h_magal@hotmail.com">&lt;h_magal@hotmail.com&gt;</a>. All Rights Are Reserved.</p>
+<p>Copyright &copy; 2024, Magal Hezi <a href="mailto:magal@pixelsolutions.biz">&lt;magal@pixelsolutions.biz&gt;</a>. All Rights Are Reserved.</p>
 <p>This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or

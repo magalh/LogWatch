@@ -4,7 +4,7 @@ class LogWatch extends CMSModule
 	const MANAGE_PERM = 'manage_LogWatch';
 	const LOGWATCH_FILE = TMP_CACHE_LOCATION . '/logwatch.cms';
 	
-	public function GetVersion() { return '1.2.0'; }
+	public function GetVersion() { return '1.3.0'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return true;}
@@ -22,6 +22,7 @@ class LogWatch extends CMSModule
 	 public function InitializeFrontend() {
 		$this->RegisterModulePlugin();
 		$this->RegisterEvents();
+		$this->initLogIt();
 	 }
 
 	 public function __construct(){
@@ -46,22 +47,36 @@ class LogWatch extends CMSModule
 		$classname = end($parts);
 		
 		$fn = cms_join_path(
-							$this->GetModulePath(),
-							'lib',
-							'class.' . $classname . '.php'
-							);
+			$this->GetModulePath(),
+			'lib',
+			'class.' . $classname . '.php'
+		);
 		
 		if(file_exists($fn))
 		{
-		require_once($fn);
+			require_once($fn);
 		}
 
 	}
 
+	private static $logItInitialized = false;
+
+	private function initLogIt() {
+        if (!self::$logItInitialized) {
+            // Include the LogIt class file
+            require_once(cms_join_path($this->GetModulePath(), 'lib', 'class.LogIt.php'));
+
+            // Initialize LogIt to set error and shutdown handlers
+            new LogIt();
+
+            self::$logItInitialized = true;
+        }
+    }
+
 	function DoEvent($originator, $eventname, &$params) {
 		if ($originator == 'Core' && $eventname == 'ContentPostRender')
 		{
-			new LogIt();
+			$this->initLogIt();
 		}
 	}
 
