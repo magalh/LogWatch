@@ -47,4 +47,9 @@ $lang['confirm_clear_all'] = 'Are you sure you want to clear all logs? This cann
 $lang['logs_cleared_success'] = 'All logs have been cleared successfully.';
 $lang['error_clearing_logs'] = 'An error occurred while trying to clear the logs.';
 
+$lang['export_csv'] = 'Export';
+$lang['error_exporting_logs'] = 'An error occurred while exporting the logs.';
+$lang['log_file_not_readable'] = 'Log file is not readable';
+
+
 ?>
