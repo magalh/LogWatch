@@ -33,7 +33,7 @@ class LogIt
         
         $this->set_error_levels();
 
-        error_reporting(E_ALL);
+        error_reporting($this->error_levels);
         ini_set('log_errors', 1);
         set_error_handler(array($this, 'errorHandler'), $this->error_levels);
         register_shutdown_function(array($this, 'shutdownHandler'));
@@ -43,7 +43,7 @@ class LogIt
     private function set_error_levels()
     {
         $mod = cms_utils::get_module('LogWatch');
-        $logsettings = $mod->GetPreference('logsettings', 'E_ALL');
+        $logsettings = $mod->GetPreference('logsettings', 'E_ERROR,E_WARNING,E_PARSE,E_NOTICE,E_USER_ERROR,E_USER_WARNING');
         $selected_logsettings = explode(',', $logsettings);
 
         $this->error_levels = 0;
