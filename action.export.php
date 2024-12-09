@@ -1,6 +1,7 @@
 <?php
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
+if( !$this->CheckPermission(LogWatch::EXPORT_LOGS) ) return;
 
 try {
     // Check if log file exists and is readable

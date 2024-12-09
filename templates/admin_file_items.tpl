@@ -14,8 +14,12 @@
   <div class="row c_full">
     <div class="pageoptions grid_6" style="margin-top: 8px;">
       <a href="{cms_action_url action=defaultadmin}">{admin_icon icon='newobject.gif'} {$mod->Lang('refresh')}</a>
-      <a href="{cms_action_url action=clear_all_logs}" class="clear-all-logs" onclick="return confirm('{$mod->Lang('confirm_clear_all')}')">{admin_icon icon='delete.gif'} {$mod->Lang('clear_all_logs')}</a>
-      <a href="{cms_action_url action=export}">{admin_icon icon='export.gif'} {$mod->Lang('export_csv')}</a>
+      {if $clear_logs}
+        <a href="{cms_action_url action=clear_all_logs}" class="clear-all-logs" onclick="return confirm('{$mod->Lang('confirm_clear_all')}')">{admin_icon icon='delete.gif'} {$mod->Lang('clear_all_logs')}</a>
+      {/if}
+      {if $export_logs}
+        <a href="{cms_action_url action=export}">{admin_icon icon='export.gif'} {$mod->Lang('export_csv')}</a>
+      {/if}
       </div>
     {if $total_items > 0 && $total_pages > 1}
       <div class="pageoptions grid_6" style="text-align: right;">

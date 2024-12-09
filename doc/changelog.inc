@@ -1,4 +1,9 @@
 <ul>
+ <li>1.4.0 - December 2024
+    <p>- Added an option to clear all errors</p>
+    <p>- Added an option to export all logs</p>
+    <p>- Added new sub permissions</p>
+  </li>
   <li>1.3.0 - July 2024
     <p>- Global Error Handler Initialization</p>
     <p>- Static Variable for Single Initialization</p>

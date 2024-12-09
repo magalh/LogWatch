@@ -32,6 +32,17 @@ $tpl->assign('pagenumber', $pagenumber);
 $tpl->assign('total_items', $total_items);
 $tpl->assign('total_pages', $total_pages);
 
+$clear_logs = false;
+if( $this->CheckPermission(LogWatch::CLEAR_LOGS) ) {
+    $clear_logs = true;
+    $tpl->assign('clear_logs', $clear_logs);
+}
+$export_logs = false;
+if( $this->CheckPermission(LogWatch::EXPORT_LOGS) ) {
+    $export_logs = true;
+    $tpl->assign('export_logs', $export_logs);
+}
+
 $tpl->display();
 
 ?>

@@ -1,6 +1,7 @@
 <?php
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
+if( !$this->CheckPermission(LogWatch::CLEAR_LOGS) ) return;
 
 try {
    // Truncate or recreate the log file

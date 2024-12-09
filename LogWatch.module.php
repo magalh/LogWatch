@@ -2,14 +2,23 @@
 class LogWatch extends CMSModule
 {
 	const MANAGE_PERM = 'manage_LogWatch';
+	const CLEAR_LOGS = 'clear_logs';
+	const EXPORT_LOGS = 'export_logs';
+
 	const LOGWATCH_FILE = TMP_CACHE_LOCATION . '/logwatch.cms';
 	
-	public function GetVersion() { return '1.3.0'; }
+	public function GetVersion() { return '1.4.0'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return true;}
 	public function HasAdmin() { return TRUE; }
-	public function VisibleToAdminUser() { return $this->CheckPermission(self::MANAGE_PERM); }
+
+	function VisibleToAdminUser()
+    {
+        return $this->CheckPermission(self::MANAGE_PERM) || $this->CheckPermission(self::CLEAR_LOGS) ||
+            $this->CheckPermission(self::EXPORT_LOGS);
+    }
+
 	public function GetAuthor() { return 'Magal Hezi'; }
 	public function GetAuthorEmail() { return 'magal@pixelsolutions.biz'; }
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
@@ -61,8 +70,33 @@ class LogWatch extends CMSModule
 
 	private static $logItInitialized = false;
 
+	private function ensureLogFileExists() {
+		if (!file_exists(self::LOGWATCH_FILE)) {
+			// Create the file with write permissions
+			$handle = @fopen(self::LOGWATCH_FILE, 'w');
+			if ($handle) {
+				fclose($handle);
+				// Only try to chmod on non-Windows systems
+				if (DIRECTORY_SEPARATOR !== '\\') {
+					@chmod(self::LOGWATCH_FILE, 0644);
+				}
+			} else {
+				throw new \RuntimeException("Failed to create log file: " . self::LOGWATCH_FILE);
+			}
+		}
+	
+		// Verify the file is writable
+		if (!is_writable(self::LOGWATCH_FILE)) {
+			throw new \RuntimeException("Log file is not writable: " . self::LOGWATCH_FILE);
+		}
+	}
+
 	private function initLogIt() {
         if (!self::$logItInitialized) {
+
+			// Ensure log file exists before initializing
+            $this->ensureLogFileExists();
+
             // Include the LogIt class file
             require_once(cms_join_path($this->GetModulePath(), 'lib', 'class.LogIt.php'));
 
