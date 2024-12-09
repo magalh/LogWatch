@@ -23,7 +23,7 @@
     });
 </script>
     
-<h3>Get started with LogWatch:</h3>
+<h3>{$mod->Lang('get_started')} LogWatch:</h3>
 {form_start}
 <div class="pageoverflow">
     <p class="pagetext">{$mod->Lang('logsettings')}:</p>

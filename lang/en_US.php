@@ -8,6 +8,7 @@ $lang['date'] = 'Date';
 $lang['type'] = 'Type';
 $lang['file'] = 'File';
 $lang['line'] = 'Line';
+$lang['get_started'] = "Get started with";
 $lang['message'] = 'Message';
 $lang['admin_save'] = "Save";
 $lang['error'] = 'Error';
@@ -40,4 +41,10 @@ $lang['viewfilter'] = 'View Filter';
 $lang['refresh'] = 'Refresh';
 $lang['logsettings'] = 'Log Settings';
 $lang['param_hid'] = 'This parameter accepts the integer id of a holiday to display';
+
+$lang['clear_all_logs'] = 'Clear All Logs';
+$lang['confirm_clear_all'] = 'Are you sure you want to clear all logs? This cannot be undone.';
+$lang['logs_cleared_success'] = 'All logs have been cleared successfully.';
+$lang['error_clearing_logs'] = 'An error occurred while trying to clear the logs.';
+
 ?>
