@@ -13,10 +13,6 @@
 {if !empty($logs)}
   <div class="row c_full">
     <div class="pageoptions grid_6" style="margin-top: 8px;">
-      <a href="{cms_action_url action=defaultadmin}">{admin_icon icon='newobject.gif'} {$mod->Lang('refresh')}</a>
-      {if $clear_logs}
-        <a href="{cms_action_url action=clear_all_logs}" class="clear-all-logs" onclick="return confirm('{$mod->Lang('confirm_clear_all')}')">{admin_icon icon='delete.gif'} {$mod->Lang('clear_all_logs')}</a>
-      {/if}
       {if $export_logs}
         <a href="{cms_action_url action=export}">{admin_icon icon='export.gif'} {$mod->Lang('export_csv')}</a>
       {/if}
@@ -43,7 +39,6 @@
         <th>{$mod->Lang('file')}</th>
         <th>Line</th>
         <th></th>
-        <th></th>
       </tr>
     </thead>
       <tbody>
@@ -63,7 +58,6 @@
         <td>
         {if $log->stacktrace}<button type="button" class="view-stack-trace" data-stacktrace="{$log->stacktrace}">View</button>{/if}
         </td>
-        <td><a class="del_log" href="{cms_action_url action=delete_line hid=$log->row}" title="{$mod->Lang('delete')}">{admin_icon icon='delete.gif'}</a></td>
         </tr>
         {/foreach}
       </tbody>

@@ -10,8 +10,25 @@
 </ul>
 
 <h3>Usage</h3>
-<p>The LogWatch module will start logging PHP errors automatically upon installation. To begin capturing logs, simply navigate through your front-end site. The module will monitor and record any PHP errors that occur during your site’s operation.</p>
-<p>You have the flexibility to customize which events you want to log. This can be done by adjusting the settings in the LogWatch module. In the settings, you can specify the types of errors and events you want to track, ensuring that you only log relevant information.</p>
+<p>LogWatch monitors server error logs and displays them in an organized, easy-to-read format within the CMS Made Simple admin panel.</p>
+
+<h4>Viewing Logs</h4>
+<ol>
+    <li>Navigate to <strong>Site Admin &gt; LogWatch</strong></li>
+    <li>Select the <strong>Logs</strong> tab to view current errors</li>
+    <li>Click the <strong>View</strong> button next to any error to see full details including stack traces</li>
+    <li>Use the <strong>Export CSV</strong> button to download logs for external analysis</li>
+</ol>
+
+<h4>Configuration</h4>
+<ol>
+    <li>Go to the <strong>Settings</strong> tab</li>
+    <li>Select your preferred <strong>Log Source</strong> from available options (Apache logs, PHP ini logs, etc.)</li>
+    <li>Choose which <strong>Error Types</strong> to display (Fatal Error, Warning, Notice, Deprecated)</li>
+    <li>Click <strong>Save</strong> to apply your settings</li>
+</ol>
+
+<p>The module automatically detects available log files on your server and supports multiple log formats including Apache error logs, PHP ini error logs, and document root error logs.</p>
 
 <h3>Testing</h3>
 <p>For testing and debugging purposes, you might want to manually trigger some errors to see how the LogWatch module captures and displays them. To do this, you can use the {LogWatch} tag on any of your front-end pages. This tag will display a series of action buttons that allow you to trigger different types of PHP errors manually. These buttons are useful for verifying that the module is correctly logging errors and for testing various error handling scenarios.</p>
@@ -22,12 +39,14 @@
 <ul>
   <li>For the latest version of this module or to file a Feature Request or Bug Report, please visit the <a href="https://github.com/magalh/LogWatch" target="_blank">LogWatch GitHub Page</a>.</li>
     <li>If you didn't find an answer to your question, you are warmly invited to open a new issue on the <a href="https://github.com/magalh/LogWatch/issues" target="_blank">LogWatch GitHub Issues Page</a>.</li>
-</ul>
 
 <li>Lastly, if you enjoy this module, use it on a commercial website or would like to encourage future development, you might consider just a small donation. Any kind of feedback will be much appreciated.<br>
 <a href="https://www.paypal.com/donate/?hosted_button_id=FWHABZUN3NC4N" target="_blank"><img src="https://raw.githubusercontent.com/aha999/DonateButtons/master/paypal-donate-icon-7.png" width="120" ></a><br>
 	</li>
 </ul>
+
+<h3>Credits</h3>
+<p>This module uses the <a href="https://github.com/kassner/log-parser" target="_blank">kassner/log-parser</a> library for robust Apache log parsing. Special thanks to the contributors of this excellent library.</p>
 
 <h3>Copyright and License</h3>
 <p>Copyright &copy; 2024, Magal Hezi <a href="mailto:magal@pixelsolutions.biz">&lt;magal@pixelsolutions.biz&gt;</a>. All Rights Are Reserved.</p>

@@ -1,13 +1,41 @@
 <?php
+#---------------------------------------------------------------------------------------------------
+# Module: LogWatch
+# Authors: Magal Hezi, with CMS Made Simple Foundation.
+# Copyright: (C) 2025 Pixel Solutions, info@pixelsolutions.biz
+# License: GNU General Public License version 2
+#          see /LogWatch/README.md or <http://www.gnu.org/licenses/gpl-2.0.html>
+#---------------------------------------------------------------------------------------------------
+# CMS Made Simple(TM) is (c) CMS Made Simple Foundation 2004-2020 (info@cmsmadesimple.org)
+# Project's homepage is: http://www.cmsmadesimple.org
+#---------------------------------------------------------------------------------------------------
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# However, as a special exception to the GPL, this software is distributed
+# as an addon module to CMS Made Simple. You may not use this software
+# in any Non GPL version of CMS Made simple, or in any version of CMS
+# Made simple that does not indicate clearly and obviously in its admin
+# section that the site was built with CMS Made simple.
+#---------------------------------------------------------------------------------------------------
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 if( !$this->CheckPermission(LogWatch::EXPORT_LOGS) ) return;
 
 try {
-    // Check if log file exists and is readable
-    $logFilePath = LogWatch::LOGWATCH_FILE;
-    if (!file_exists($logFilePath) || !is_readable($logFilePath)) {
-        throw new Exception($this->Lang('log_file_not_readable'));
+    // Get selected log source
+    $selected_log_source = $this->GetPreference('log_source', '');
+    $available_logs = LogWatch::detectAvailableLogFiles();
+    
+    if (empty($selected_log_source) || !isset($available_logs[$selected_log_source])) {
+        throw new Exception('No log source selected');
+    }
+    
+    $log_file_path = $available_logs[$selected_log_source]['path'];
+    if (!file_exists($log_file_path) || !is_readable($log_file_path)) {
+        throw new Exception('Log file not readable');
     }
 
     // Set headers for CSV download
@@ -22,46 +50,36 @@ try {
     // Open output stream
     $output = fopen('php://output', 'w');
 
-    // Write CSV header based on your format
+    // Write CSV header
     fputcsv($output, array(
-        'Created',
-        'Name',
+        'Date',
         'Type',
+        'Message',
         'File',
         'Line',
-        'Description',
-        'Stacktrace'
+        'Full Details'
     ));
 
-    // Read log file and parse entries
-    $logContent = file_get_contents($logFilePath);
-    $logEntries = explode("\n", $logContent);
-
-    foreach ($logEntries as $entry) {
-        if (empty(trim($entry))) {
-            continue;
-        }
-
-        // Parse pipe-delimited log entry
-        $data = explode('|', $entry);
-        if (count($data) >= 7) {
-            fputcsv($output, array(
-                $data[0], // created
-                $data[1], // name
-                $data[2], // type
-                $data[3], // file
-                $data[4], // line
-                $data[5], // description
-                $data[6]  // stacktrace
-            ));
-        }
+    // Parse log file using ServerLogParser
+    $logQuery = new FileQuery($log_file_path);
+    $logs = $logQuery->parseLogFile();
+    
+    foreach ($logs as $log) {
+        fputcsv($output, array(
+            date('Y-m-d H:i:s', $log->created),
+            $log->type,
+            $log->description,
+            $log->file,
+            $log->line,
+            strip_tags(str_replace('<br>', "\n", $log->stacktrace))
+        ));
     }
 
     fclose($output);
     exit();
 
 } catch (Exception $e) {
-    $this->SetError($this->Lang('error_exporting_logs'));
+    $this->SetError('Error exporting logs: ' . $e->getMessage());
     $this->RedirectToAdminTab();
 }
 
