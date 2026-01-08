@@ -1,0 +1,14 @@
+{
+    "name": "logwatch/cmsms-module",
+    "description": "LogWatch module for CMS Made Simple",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "kassner/log-parser": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "LogWatch\\": "lib/"
+        }
+    }
+}
