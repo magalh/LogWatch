@@ -25,4 +25,8 @@ if( !defined('CMS_VERSION') ) exit;
 $this->RemovePermission(LogWatch::MANAGE_PERM);
 
 $this->RemovePreference();
+
+// Track installation
+include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
+ModuleTracker::track('LogWatch', 'uninstall');
 ?>
