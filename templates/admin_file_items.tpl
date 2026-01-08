@@ -40,6 +40,8 @@
         <th>{$mod->Lang('date')}</th>
         <th>{$mod->Lang('type')}</th>
         <th>{$mod->Lang('message')}</th>
+        <th>{$mod->Lang('file')}</th>
+        <th>Line</th>
         <th></th>
         <th></th>
       </tr>
@@ -51,8 +53,12 @@
         <td>{$log->type|typeicon}</td>
         <td class="word-wrap">
           <strong>{$log->description}</strong>
-          {if $log->file}<br>{$log->file|noroot}{/if}
-          {if $log->line}<br>line# {$log->line}{/if}
+        </td>
+        <td class="word-wrap">
+          {if $log->file}{$log->file|noroot}{/if}
+        </td>
+        <td>
+          {if $log->line}{$log->line}{/if}
         </td>
         <td>
         {if $log->stacktrace}<button type="button" class="view-stack-trace" data-stacktrace="{$log->stacktrace}">View</button>{/if}

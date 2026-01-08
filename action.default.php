@@ -1,30 +1,21 @@
 <?php
 if( !defined('CMS_VERSION') ) exit;
 
-$logger = new LogIt;
+// Test error generation for demonstration
 if (isset($params['submit_1'])) {
-    $logger::triggerPhpErrors(1);
+    $uninitialized_variable = $undefinedVariable; // Notice
 }
 if (isset($params['submit_2'])) {
-    $logger::triggerPhpErrors(2);
+    $result = 1 / 0; // Warning
 }
 if (isset($params['submit_3'])) {
-    $logger::triggerPhpErrors(3);
+    trigger_error('This is a user error', E_USER_ERROR);
 }
 if (isset($params['submit_4'])) {
-    $logger::triggerPhpErrors(4);
+    trigger_error('This is a user warning', E_USER_WARNING);
 }
 if (isset($params['submit_5'])) {
-    $logger::triggerPhpErrors(5);
-}
-if (isset($params['submit_6'])) {
-    $logger::triggerPhpErrors(6);
-}
-if (isset($params['submit_7'])) {
-    $logger::triggerPhpErrors(7);
-}
-if (isset($params['submit_8'])) {
-    $logger::triggerPhpErrors(8);
+    trigger_error('This is a user notice', E_USER_NOTICE);
 }
 
 $tpl = $smarty->CreateTemplate($this->GetTemplateResource('default.tpl'),null,null,$smarty);

@@ -4,10 +4,8 @@ class LogWatch extends CMSModule
 	const MANAGE_PERM = 'manage_LogWatch';
 	const CLEAR_LOGS = 'clear_logs';
 	const EXPORT_LOGS = 'export_logs';
-
-	const LOGWATCH_FILE = TMP_CACHE_LOCATION . '/logwatch.cms';
 	
-	public function GetVersion() { return '1.4.0'; }
+	public function GetVersion() { return '2.0.0'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return true;}
@@ -30,11 +28,15 @@ class LogWatch extends CMSModule
 
 	 public function InitializeFrontend() {
 		$this->RegisterModulePlugin();
-		$this->RegisterEvents();
-		$this->initLogIt();
 	 }
 
 	 public function __construct(){
+		
+		// Load composer dependencies
+		$autoload_file = cms_join_path($this->GetModulePath(), 'vendor', 'autoload.php');
+		if (file_exists($autoload_file)) {
+			require_once $autoload_file;
+		}
 		
 		spl_autoload_register( array($this, '_autoloader') );
 		
@@ -46,7 +48,6 @@ class LogWatch extends CMSModule
 
 		$plugins_dir = cms_join_path( $this->GetModulePath(), 'lib', 'plugins' );
 		$smarty->addPluginsDir($plugins_dir);
-		$smarty->registerClass('LogIt', 'LogIt');
 
     }
 
@@ -68,63 +69,82 @@ class LogWatch extends CMSModule
 
 	}
 
-	private static $logItInitialized = false;
-
-	private function ensureLogFileExists() {
-		if (!file_exists(self::LOGWATCH_FILE)) {
-			// Create the file with write permissions
-			$handle = @fopen(self::LOGWATCH_FILE, 'w');
-			if ($handle) {
-				fclose($handle);
-				// Only try to chmod on non-Windows systems
-				if (DIRECTORY_SEPARATOR !== '\\') {
-					@chmod(self::LOGWATCH_FILE, 0644);
-				}
-			} else {
-				throw new \RuntimeException("Failed to create log file: " . self::LOGWATCH_FILE);
+	public static function detectAvailableLogFiles() {
+		$logs = [];
+		
+		// Virtual host error logs (prioritize these)
+		$server_name = $_SERVER['SERVER_NAME'] ?? '';
+		$vhost_patterns = [
+			"/var/log/apache2/{$server_name}.error.log",
+			"/var/log/apache2/{$server_name}.local.error.log",
+			"/var/log/httpd/{$server_name}.error.log",
+			"/var/log/nginx/{$server_name}.error.log"
+		];
+		
+		foreach ($vhost_patterns as $path) {
+			if (file_exists($path) && is_readable($path)) {
+				$logs['vhost_' . md5($path)] = [
+					'name' => 'Virtual Host Log (' . basename($path) . ')',
+					'path' => $path,
+					'type' => 'server',
+					'exists' => true
+				];
+				break; // Only add first found
 			}
 		}
-	
-		// Verify the file is writable
-		if (!is_writable(self::LOGWATCH_FILE)) {
-			throw new \RuntimeException("Log file is not writable: " . self::LOGWATCH_FILE);
+		
+		// PHP ini error log
+		$php_log = ini_get('error_log');
+		if ($php_log && $php_log !== 'syslog') {
+			$logs['php_ini'] = [
+				'name' => 'PHP Error Log (ini)',
+				'path' => $php_log,
+				'type' => 'server',
+				'exists' => file_exists($php_log) && is_readable($php_log)
+			];
 		}
-	}
-
-	private function initLogIt() {
-        if (!self::$logItInitialized) {
-
-			// Ensure log file exists before initializing
-            $this->ensureLogFileExists();
-
-            // Include the LogIt class file
-            require_once(cms_join_path($this->GetModulePath(), 'lib', 'class.LogIt.php'));
-
-            // Initialize LogIt to set error and shutdown handlers
-            new LogIt();
-
-            self::$logItInitialized = true;
-        }
-    }
-
-	function DoEvent($originator, $eventname, &$params) {
-		if ($originator == 'Core' && $eventname == 'ContentPostRender')
-		{
-			$this->initLogIt();
+		
+		// Common server error logs
+		$common_paths = [
+			$_SERVER['DOCUMENT_ROOT'] . '/error_log' => 'Document Root Error Log',
+			$_SERVER['DOCUMENT_ROOT'] . '/../logs/error_log' => 'Parent Logs Directory',
+			'/var/log/apache2/error.log' => 'Apache Error Log',
+			'/var/log/httpd/error_log' => 'HTTPd Error Log'
+		];
+		
+		foreach ($common_paths as $path => $name) {
+			if (file_exists($path) && is_readable($path)) {
+				$key = 'common_' . md5($path);
+				if (!isset($logs[$key])) {
+					$logs[$key] = [
+						'name' => $name,
+						'path' => $path,
+						'type' => 'server',
+						'exists' => true
+					];
+				}
+			}
 		}
+		
+		return $logs;
 	}
-
-	public function RegisterEvents()
-    {
-        $this->AddEventHandler('Core', 'ContentPostRender', false);
-    }
 	
-	public function GetHelp() {
-        return @file_get_contents(__DIR__.'/README.md');
+    public function GetHelp() {
+        $base_dir = realpath(__DIR__);
+        $file = realpath(__DIR__.'/README.md');
+        if (!$file || !$base_dir || !is_file($file) || !is_readable($file)) return '';
+        if (strpos($file, $base_dir) !== 0) return '';
+        if (basename($file) !== 'README.md') return '';
+        return @file_get_contents($file);
     }
 
     public function GetChangeLog() {
-        return @file_get_contents(__DIR__.'/doc/changelog.inc');
+        $base_dir = realpath(__DIR__);
+        $file = realpath(__DIR__.'/doc/changelog.inc');
+        if (!$file || !$base_dir || !is_file($file) || !is_readable($file)) return '';
+        if (strpos($file, $base_dir) !== 0) return '';
+        if (basename($file) !== 'changelog.inc') return '';
+        return @file_get_contents($file);
     }
 
 }
