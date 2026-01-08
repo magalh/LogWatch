@@ -20,6 +20,9 @@
     <li>Use the <strong>Export CSV</strong> button to download logs for external analysis</li>
 </ol>
 
+<h3>Screenshots</h3>
+<p><img src="https://cmsms-downloads.s3.eu-south-1.amazonaws.com/LogWatch/thumbnail.jpg" alt="LogWatch module" width="900"></p>
+
 <h4>Configuration</h4>
 <ol>
     <li>Go to the <strong>Settings</strong> tab</li>
