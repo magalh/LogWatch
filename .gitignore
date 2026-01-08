@@ -1,1 +1,5 @@
 moduleinfo.ini
+.aws
+.amazonq
+releases/
+build.sh
