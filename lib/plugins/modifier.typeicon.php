@@ -31,7 +31,11 @@ function smarty_modifier_typeicon($type) {
         'Warning' => '<img src="' . $base_url . 'warning.gif" alt="Warning" title="Warning" style="width:16px;height:16px;">', 
         'Notice' => '<img src="' . $base_url . 'info.gif" alt="Notice" title="Notice" style="width:16px;height:16px;">',
         'Deprecated' => '<img src="' . $extra_url . 'yellow.gif" alt="Deprecated" title="Deprecated" style="width:16px;height:16px;">',
-        'Error' => '<img src="' . $base_url . 'delete.gif" alt="Error" title="Error" style="width:16px;height:16px;">'  
+        'Error' => '<img src="' . $base_url . 'delete.gif" alt="Error" title="Error" style="width:16px;height:16px;">',
+        'Fatal' => '<img src="' . $base_url . 'stop.gif" alt="Fatal" title="Fatal" style="width:16px;height:16px;">',
+        'Crit' => '<img src="' . $base_url . 'stop.gif" alt="Critical" title="Critical" style="width:16px;height:16px;">',
+        'Alert' => '<img src="' . $base_url . 'warning.gif" alt="Alert" title="Alert" style="width:16px;height:16px;">',
+        'Emerg' => '<img src="' . $base_url . 'stop.gif" alt="Emergency" title="Emergency" style="width:16px;height:16px;">'  
     ];
     
     return $icons[$type] ?? '<img src="' . $base_url . 'info.gif" alt="Unknown" title="Unknown" style="width:16px;height:16px;">';

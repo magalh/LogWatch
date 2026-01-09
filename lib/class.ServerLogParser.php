@@ -26,71 +26,183 @@ class ServerLogParser
 {
     public static function parseEntry($logEntry, $rowIndex)
     {
-        // Parse Apache error log format: [timestamp] [module:level] [pid] [client] message
-        $pattern = '/^\[([^\]]+)\]\s+\[([^:]+):([^\]]+)\]\s+(?:\[pid\s+\d+\]\s+)?(?:\[client\s+[^\]]+\]\s+)?(.+)$/s';
+        $logEntry = trim($logEntry);
         
-        if (!preg_match($pattern, trim($logEntry), $matches)) {
+        // Skip empty lines or malformed entries
+        if (empty($logEntry)) {
             return null;
         }
         
-        $timestamp_str = $matches[1];
-        $module = $matches[2];
-        $level = ucfirst($matches[3]);
-        $message = $matches[4];
+        // Try PHP error log format first: [timestamp] PHP Level: message
+        if (preg_match('/^\[([^\]]+)\]\s+PHP\s+(\w+):\s*(.+)$/', $logEntry, $matches)) {
+            return self::parsePHPError($matches, $rowIndex);
+        }
         
-        // Parse timestamp
-        $timestamp_str = preg_replace('/\.(\d+)/', '', $timestamp_str);
+        // Try Apache error log format: [timestamp] [module:level] [pid] [client] message
+        if (preg_match('/^\[([^\]]+)\]\s+\[([^\]]+)\](?:\s+\[[^\]]+\])*\s*(.+)$/', $logEntry, $matches)) {
+            return self::parseApacheError($matches, $rowIndex);
+        }
+        
+        // Try Nginx error log format: timestamp [level] pid#tid: message
+        if (preg_match('/^(\d{4}\/\d{2}\/\d{2}\s+\d{2}:\d{2}:\d{2})\s+\[([^\]]+)\]\s+\d+#\d+:\s*(.+)$/', $logEntry, $matches)) {
+            return self::parseNginxError($matches, $rowIndex);
+        }
+        
+        // Try syslog format: timestamp hostname process[pid]: message
+        if (preg_match('/^(\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})\s+\S+\s+(\w+)(?:\[\d+\])?:\s*(.+)$/', $logEntry, $matches)) {
+            return self::parseSyslogError($matches, $rowIndex);
+        }
+        
+        return null;
+    }
+    
+    private static function parsePHPError($matches, $rowIndex)
+    {
+        $timestamp_str = $matches[1];
+        $level = $matches[2];
+        $message = $matches[3];
+        
         $created = strtotime($timestamp_str);
         if ($created === false) {
-            if (preg_match('/\w+\s+(\w+)\s+(\d+)\s+([\d:]+)\s+(\d+)/', $timestamp_str, $dateMatches)) {
-                $created = strtotime("{$dateMatches[1]} {$dateMatches[2]} {$dateMatches[4]} {$dateMatches[3]}");
-            } else {
-                $created = time();
-            }
+            $created = time();
         }
         
-        $logs = [];
+        // Better error type detection
+        if (false !== strpos($message, 'PHP Warning')) {
+            $level = 'Warning';
+            $message = str_replace('PHP Warning:', '', $message);
+        } else if (false !== strpos($message, 'PHP Notice')) {
+            $level = 'Notice';
+            $message = str_replace('PHP Notice:', '', $message);
+        } else if (false !== strpos($message, 'PHP Fatal error')) {
+            $level = 'Fatal error';
+            $message = str_replace('PHP Fatal error:', '', $message);
+        } else if (false !== strpos($message, 'PHP Parse error')) {
+            $level = 'Parse error';
+            $message = str_replace('PHP Parse error:', '', $message);
+        } else if (false !== strpos($message, 'PHP Deprecated')) {
+            $level = 'Deprecated';
+            $message = str_replace('PHP Deprecated:', '', $message);
+        }
         
-        // Check if this contains PHP messages
-        if (preg_match('/Got error \'(.+)\'(?:,\s*referer:.*)?$/s', $message, $errorMatch)) {
-            $errorContent = $errorMatch[1];
-            
-            // Split by PHP message boundaries
-            $parts = preg_split('/;\s*PHP message:\s*/i', $errorContent);
-            
-            foreach ($parts as $index => $part) {
-                if (empty(trim($part))) continue;
-                
-                // Clean up the part
-                $part = preg_replace('/^PHP message:\s*/i', '', $part);
-                
-                $logitem = new stdClass();
-                $logitem->row = $rowIndex + $index;
-                $logitem->created = $created;
-                $logitem->name = 'Server Log';
-                $logitem->type = self::extractErrorType($part);
-                $logitem->description = self::extractShortDescription($part);
-                $logitem->file = self::extractFile($part);
-                $logitem->line = self::extractLine($part);
-                $logitem->stacktrace = htmlspecialchars(str_replace('\n', '<br>', trim($part)), ENT_QUOTES);
-                
-                $logs[] = $logitem;
-            }
+        $message = trim($message);
+        
+        // Extract file and line
+        $errorFile = '';
+        $errorLine = 0;
+        
+        if (false !== strpos($message, ' on line ')) {
+            $parts = explode(' on line ', $message);
+            $errorLine = (int)trim($parts[1]);
+            $message = str_replace(' on line ' . $errorLine, '', $message);
+        }
+        
+        if (false !== strpos($message, ' in /')) {
+            $parts = explode(' in /', $message);
+            $errorFile = '/' . trim($parts[1]);
+            $message = str_replace(' in ' . $errorFile, '', $message);
+        }
+        
+        $logitem = new stdClass();
+        $logitem->row = $rowIndex;
+        $logitem->created = $created;
+        $logitem->name = 'PHP Error Log';
+        $logitem->type = $level;
+        $logitem->description = trim($message);
+        $logitem->file = $errorFile;
+        $logitem->line = $errorLine;
+        $logitem->stacktrace = htmlspecialchars($matches[3], ENT_QUOTES);
+        
+        return $logitem;
+    }
+    
+    private static function parseApacheError($matches, $rowIndex)
+    {
+        $timestamp_str = $matches[1];
+        $module_level = $matches[2];
+        $message = $matches[3];
+        
+        // Extract PHP error type from message if it contains PHP errors
+        $level = 'Error';
+        if (preg_match('/PHP message: PHP (Fatal error|Warning|Notice|Deprecated|Error):/i', $message, $phpMatch)) {
+            $level = $phpMatch[1];
+        } else if (preg_match('/([^:]+:)?(emerg|alert|crit|error|warn|notice|info|debug)$/i', $module_level, $levelMatch)) {
+            $level = ucfirst(strtolower($levelMatch[2]));
+            if ($level === 'Warn') $level = 'Warning';
+            if ($level === 'Crit') $level = 'Critical';
+        }
+        
+        // Parse Apache timestamp: "Fri Jan 09 10:47:57.993211 2026"
+        if (preg_match('/^(\w{3}\s+\w{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})(?:\.\d+)?\s+(\d{4})/', $timestamp_str, $timeMatch)) {
+            $created = strtotime($timeMatch[1] . ' ' . $timeMatch[2]);
         } else {
-            // Non-PHP error (Apache/proxy errors)
-            $logitem = new stdClass();
-            $logitem->row = $rowIndex;
-            $logitem->created = $created;
-            $logitem->name = 'Server Log';
-            $logitem->type = $level;
-            $logitem->description = trim($message);
-            $logitem->file = '';
-            $logitem->line = 0;
-            $logitem->stacktrace = htmlspecialchars(str_replace('\n', '<br>', trim($message)), ENT_QUOTES);
-            $logs[] = $logitem;
+            $created = strtotime($timestamp_str);
         }
         
-        return count($logs) === 1 ? $logs[0] : $logs;
+        if ($created === false) {
+            $created = time();
+        }
+        
+        $logitem = new stdClass();
+        $logitem->row = $rowIndex;
+        $logitem->created = $created;
+        $logitem->name = 'Apache Error Log';
+        $logitem->type = $level;
+        $logitem->description = self::extractShortDescription($message);
+        $logitem->file = self::extractFile($message);
+        $logitem->line = self::extractLine($message);
+        $logitem->stacktrace = htmlspecialchars($message, ENT_QUOTES);
+        
+        return $logitem;
+    }
+    
+    private static function parseNginxError($matches, $rowIndex)
+    {
+        $timestamp_str = $matches[1];
+        $level = $matches[2];
+        $message = $matches[3];
+        
+        $created = strtotime($timestamp_str);
+        if ($created === false) {
+            $created = time();
+        }
+        
+        $logitem = new stdClass();
+        $logitem->row = $rowIndex;
+        $logitem->created = $created;
+        $logitem->name = 'Nginx Error Log';
+        $logitem->type = ucfirst($level);
+        $logitem->description = self::extractShortDescription($message);
+        $logitem->file = self::extractFile($message);
+        $logitem->line = self::extractLine($message);
+        $logitem->stacktrace = htmlspecialchars($message, ENT_QUOTES);
+        
+        return $logitem;
+    }
+    
+    private static function parseSyslogError($matches, $rowIndex)
+    {
+        $timestamp_str = $matches[1];
+        $process = $matches[2];
+        $message = $matches[3];
+        
+        $timestamp_str = date('Y') . ' ' . $timestamp_str;
+        $created = strtotime($timestamp_str);
+        if ($created === false) {
+            $created = time();
+        }
+        
+        $logitem = new stdClass();
+        $logitem->row = $rowIndex;
+        $logitem->created = $created;
+        $logitem->name = 'System Log';
+        $logitem->type = ucfirst($process);
+        $logitem->description = self::extractShortDescription($message);
+        $logitem->file = self::extractFile($message);
+        $logitem->line = self::extractLine($message);
+        $logitem->stacktrace = htmlspecialchars($message, ENT_QUOTES);
+        
+        return $logitem;
     }
     
     private static function extractErrorType($part)
@@ -107,6 +219,11 @@ class ServerLogParser
     
     private static function extractShortDescription($part)
     {
+        // For Apache logs with PHP messages, extract just the PHP error message
+        if (preg_match('/Got error \'PHP message: PHP (?:Fatal error|Warning|Notice|Deprecated|Error):\s*(.+?)\s+in\s+/', $part, $match)) {
+            return trim($match[1]);
+        }
+        
         // Extract just the error message without file/line info
         if (preg_match('/^PHP\s+\w+(?:\s+\w+)*:\s*(.+?)\s+in\s+/', $part, $match)) {
             return trim($match[1]);

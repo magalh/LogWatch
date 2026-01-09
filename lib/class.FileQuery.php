@@ -41,8 +41,11 @@ class FileQuery
             return [];
         }
 
-        // Split by log entry pattern (timestamp at start of line)
-        $entries = preg_split('/(?=\[\w+\s+\w+\s+\d+\s+[\d:.]+\s+\d{4}\])/', $content, -1, PREG_SPLIT_NO_EMPTY);
+        // Split by lines and process each line as a separate entry
+        $lines = explode("\n", $content);
+        $entries = array_filter(array_map('trim', $lines), function($line) {
+            return !empty($line) && strpos($line, '[') === 0;
+        });
         
         $i = 0;
         foreach ($entries as $entry) {
