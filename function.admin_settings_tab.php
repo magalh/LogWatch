@@ -23,24 +23,15 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 
-if( isset($params['submit']) ) {
-    $logsettings = isset($params['logsettings']) ? $params['logsettings'] : [];
-    $this->SetPreference('logsettings', implode(',', $logsettings));
-    
-    $selected_log_source = isset($params['log_source']) ? $params['log_source'] : 'logwatch';
-    $this->SetPreference('log_source', $selected_log_source);
-    
-    $this->SetMessage("Saved");
-    $this->RedirectToAdminTab();
-}
-
 $logsettings = $this->GetPreference('logsettings', 'E_ALL');
 $selected_logsettings = explode(',', $logsettings);
 $selected_log_source = $this->GetPreference('log_source', '');
+$manual_log_path = $this->GetPreference('manual_log_path', '');
 
-// Auto-select first available log if none selected
-if (empty($selected_log_source)) {
-    $available_logs = LogWatch::detectAvailableLogFiles();
+$available_logs = LogWatch::detectAvailableLogFiles();
+
+// Auto-select first available log if none selected and logs are available
+if (empty($selected_log_source) && !empty($available_logs)) {
     $first_available = array_key_first($available_logs);
     if ($first_available) {
         $selected_log_source = $first_available;
@@ -59,11 +50,31 @@ $exceptions = [
 
 $available_logs = LogWatch::detectAvailableLogFiles();
 
+// Handle manual log path and check if it exists
+$manual_log_error = false;
+if ($selected_log_source === 'manual' && !empty($manual_log_path)) {
+    $file_exists = file_exists($manual_log_path) && is_readable($manual_log_path);
+    $available_logs['manual'] = [
+        'name' => 'Manual Log Path',
+        'path' => $manual_log_path,
+        'type' => 'manual',
+        'exists' => $file_exists
+    ];
+    
+    if (!$file_exists) {
+        $manual_log_error = true;
+    }
+}
+
 $tpl = $smarty->CreateTemplate( $this->GetTemplateResource('admin_settings_tab.tpl'), null, null, $smarty );
 $tpl->assign('selected_logsettings', $selected_logsettings);
 $tpl->assign('exceptions', $exceptions);
 $tpl->assign('available_logs', $available_logs);
 $tpl->assign('selected_log_source', $selected_log_source);
+$tpl->assign('selected_log_info', isset($available_logs[$selected_log_source]) ? $available_logs[$selected_log_source] : null);
+$tpl->assign('manual_log_path', $manual_log_path);
+$tpl->assign('manual_log_error', $manual_log_error);
+$tpl->assign('has_log_sources', !empty($available_logs) || !empty($manual_log_path));
 $tpl->display();
 
 ?>

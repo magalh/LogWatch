@@ -41,6 +41,19 @@ $offset = ($pagenumber - 1) * $pagelimit;
 $selected_log_source = $this->GetPreference('log_source', '');
 $available_logs = LogWatch::detectAvailableLogFiles();
 
+// Handle manual log path
+if ($selected_log_source === 'manual') {
+    $manual_path = $this->GetPreference('manual_log_path', '');
+    if (!empty($manual_path)) {
+        $available_logs['manual'] = [
+            'name' => 'Manual Log Path',
+            'path' => $manual_path,
+            'type' => 'manual',
+            'exists' => file_exists($manual_path) && is_readable($manual_path)
+        ];
+    }
+}
+
 // Auto-select first available if none selected
 if (empty($selected_log_source) || !isset($available_logs[$selected_log_source])) {
     $first_available = array_key_first($available_logs);
@@ -69,8 +82,8 @@ if ($selected_log_source && isset($available_logs[$selected_log_source])) {
         });
     }
     
-    $total_items = count($all_logs);
-    $logs = array_slice($all_logs, $offset, $pagelimit);
+    $total_items = is_array($all_logs) ? count($all_logs) : 0;
+    $logs = is_array($all_logs) ? array_slice($all_logs, $offset, $pagelimit) : [];
 } else {
     $total_items = 0;
 }

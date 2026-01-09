@@ -1,4 +1,10 @@
 <ul>
+ <li>2.0.1 - January 2025
+    <p>- Added manual log file path configuration for shared hosting compatibility</p>
+    <p>- Created separate Filters tab for better UI organization</p>
+    <p>- Improved Italian language translations</p>
+    <p>- Enhanced admin interface with proper error alerts and validation</p>
+  </li>
  <li>2.0.0 - January 2025
     <p>- Complete rewrite with modern log parsing using kassner/log-parser library</p>
     <p>- Added support for multiple log sources (Apache, PHP ini, virtual host, document root)</p>

@@ -27,10 +27,11 @@ class LogWatch extends CMSModule
 	const CLEAR_LOGS = 'clear_logs';
 	const EXPORT_LOGS = 'export_logs';
 	
-	public function GetVersion() { return '2.0.0'; }
+	public function IsPluginModule() { return true;}
+	public function GetVersion() { return '2.0.1'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
-	public function IsPluginModule() { return true;}
+    public function MinimumCMSVersion() { return '2.2.0'; }
 	public function HasAdmin() { return TRUE; }
 
 	function VisibleToAdminUser()
