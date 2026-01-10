@@ -32,6 +32,9 @@ class ComposerStaticInite94549085d5c1c2f9515bb234302dd13
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Kassner\\LogParser\\Factory' => __DIR__ . '/..' . '/kassner/log-parser/src/Kassner/LogParser/Factory.php',
+        'Kassner\\LogParser\\FormatException' => __DIR__ . '/..' . '/kassner/log-parser/src/Kassner/LogParser/FormatException.php',
+        'Kassner\\LogParser\\LogParser' => __DIR__ . '/..' . '/kassner/log-parser/src/Kassner/LogParser/LogParser.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

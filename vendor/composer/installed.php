@@ -5,9 +5,9 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '2223aade944da41071da713b549a2e84edc2045a',
+        'reference' => 'fa313d03154ffe4a6312065b6ddb00311b5d190a',
         'name' => 'logwatch/cmsms-module',
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'kassner/log-parser' => array(
@@ -25,7 +25,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '2223aade944da41071da713b549a2e84edc2045a',
+            'reference' => 'fa313d03154ffe4a6312065b6ddb00311b5d190a',
             'dev_requirement' => false,
         ),
     ),

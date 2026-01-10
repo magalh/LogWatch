@@ -7,4 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Kassner\\LogParser\\Factory' => $vendorDir . '/kassner/log-parser/src/Kassner/LogParser/Factory.php',
+    'Kassner\\LogParser\\FormatException' => $vendorDir . '/kassner/log-parser/src/Kassner/LogParser/FormatException.php',
+    'Kassner\\LogParser\\LogParser' => $vendorDir . '/kassner/log-parser/src/Kassner/LogParser/LogParser.php',
 );
