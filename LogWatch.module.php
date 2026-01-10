@@ -28,7 +28,7 @@ class LogWatch extends CMSModule
 	const EXPORT_LOGS = 'export_logs';
 	
 	public function IsPluginModule() { return true;}
-	public function GetVersion() { return '2.1.0'; }
+	public function GetVersion() { return '2.2.0'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
     public function MinimumCMSVersion() { return '2.2.0'; }
@@ -211,6 +211,75 @@ class LogWatch extends CMSModule
 		}
 		
 		return $logs;
+	}
+	
+	public function hideError($file, $line, $message, $notes = '')
+	{
+		$error_hash = md5($file . ':' . $line . ':' . trim($message));
+		$user_id = get_userid();
+		
+		$db = $this->GetDb();
+		$sql = "INSERT IGNORE INTO " . cms_db_prefix() . "module_logwatch_hidden 
+				(error_hash, file_path, line_number, error_message, hidden_by, hidden_date, notes) 
+				VALUES (?, ?, ?, ?, ?, NOW(), ?)";
+		
+		return $db->Execute($sql, [$error_hash, $file, $line, $message, $user_id, $notes]);
+	}
+	
+	public function hideErrorByHash($error_hash, $notes = '')
+	{
+		$user_id = get_userid();
+		
+		$db = $this->GetDb();
+		$sql = "INSERT IGNORE INTO " . cms_db_prefix() . "module_logwatch_hidden 
+				(error_hash, hidden_by, hidden_date, notes) 
+				VALUES (?, ?, NOW(), ?)";
+		
+		return $db->Execute($sql, [$error_hash, $user_id, $notes]);
+	}
+	
+	public function hideErrorComplete($error_hash, $file, $line, $message, $notes = '')
+	{
+		$user_id = get_userid();
+		
+		$db = $this->GetDb();
+		$sql = "INSERT IGNORE INTO " . cms_db_prefix() . "module_logwatch_hidden 
+				(error_hash, file_path, line_number, error_message, hidden_by, hidden_date, notes) 
+				VALUES (?, ?, ?, ?, ?, NOW(), ?)";
+		
+		return $db->Execute($sql, [$error_hash, $file, $line, $message, $user_id, $notes]);
+	}
+	
+	public function unhideError($error_hash)
+	{
+		$db = $this->GetDb();
+		$sql = "DELETE FROM " . cms_db_prefix() . "module_logwatch_hidden WHERE error_hash = ?";
+		return $db->Execute($sql, [$error_hash]);
+	}
+	
+	public function isErrorHidden($log)
+	{
+		$error_hash = md5($log->file . ':' . $log->line . ':' . trim($log->description));
+		
+		$db = $this->GetDb();
+		$sql = "SELECT id FROM " . cms_db_prefix() . "module_logwatch_hidden WHERE error_hash = ?";
+		$result = $db->Execute($sql, [$error_hash]);
+		
+		return $result && !$result->EOF;
+	}
+	
+	public function getErrorHash($log)
+	{
+		return md5($log->file . ':' . $log->line . ':' . trim($log->description));
+	}
+	
+	public function getHiddenErrorsCount()
+	{
+		$db = $this->GetDb();
+		$sql = "SELECT COUNT(DISTINCT error_hash) as count FROM " . cms_db_prefix() . "module_logwatch_hidden";
+		$result = $db->Execute($sql);
+		
+		return $result ? (int)$result->fields['count'] : 0;
 	}
 	
     public function GetHelp() {

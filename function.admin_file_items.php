@@ -82,6 +82,11 @@ if ($selected_log_source && isset($available_logs[$selected_log_source])) {
         });
     }
     
+    // Filter out hidden errors
+    $all_logs = array_filter($all_logs, function($log) {
+        return !$this->isErrorHidden($log);
+    });
+    
     $total_items = is_array($all_logs) ? count($all_logs) : 0;
     $logs = is_array($all_logs) ? array_slice($all_logs, $offset, $pagelimit) : [];
 } else {

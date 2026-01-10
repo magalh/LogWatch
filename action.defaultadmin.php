@@ -55,6 +55,9 @@ echo '</div>';
 echo $this->StartTabHeaders();
 	if ($has_valid_log_source) {
 		echo $this->SetTabHeader('logs', "Logs");
+		$hidden_count = $this->getHiddenErrorsCount();
+		$hidden_label = "Hidden Errors" . ($hidden_count > 0 ? " ({$hidden_count})" : "");
+		echo $this->SetTabHeader('hidden', $hidden_label);
 		echo $this->SetTabHeader('filters', "Filters");
 	}
 	echo $this->SetTabHeader('settings',"Settings");
@@ -64,6 +67,10 @@ echo $this->StartTabContent();
 	if ($has_valid_log_source) {
 		echo $this->StartTab('logs');
 		include(__DIR__.'/function.admin_file_items.php');
+		echo $this->EndTab();
+
+		echo $this->StartTab('hidden');
+		include(__DIR__.'/function.admin_hidden_errors.php');
 		echo $this->EndTab();
 
 		echo $this->StartTab('filters');
