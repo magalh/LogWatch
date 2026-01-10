@@ -1,4 +1,11 @@
 <ul>
+ <li>2.1.0 - January 2025
+    <p>- Enhanced log file detection with CMS_ROOT_PATH and CMS_ROOT_URL for better reliability</p>
+    <p>- Added comprehensive home directory log scanning patterns</p>
+    <p>- Improved subdomain log detection with multiple naming conventions</p>
+    <p>- Fixed date column width in admin interface for better readability</p>
+    <p>- Added support for various log file naming patterns in shared hosting environments</p>
+  </li>
  <li>2.0.2 - January 2025
     <p>- Implemented separate PHP and Apache log parsers for better accuracy</p>
     <p>- Added PhpLogParser class for multiline PHP error logs with stack traces</p>
