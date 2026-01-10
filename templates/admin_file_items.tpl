@@ -4,6 +4,11 @@
         word-break: break-all;
         white-space: normal;
     }
+    .pagetable th:first-child,
+    .pagetable td:first-child {
+        width: 150px;
+        white-space: nowrap;
+    }
 </style>
   
 {if !empty($error) }
