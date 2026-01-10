@@ -97,12 +97,39 @@ class LogWatch extends CMSModule
 		
 		// Virtual host error logs (prioritize these)
 		$server_name = $_SERVER['SERVER_NAME'] ?? '';
+		if (defined('CMS_ROOT_URL')) {
+			$parsed_url = parse_url(CMS_ROOT_URL);
+			if (isset($parsed_url['host'])) {
+				$server_name = $parsed_url['host'];
+			}
+		}
 		$vhost_patterns = [
 			"/var/log/apache2/{$server_name}.error.log",
 			"/var/log/apache2/{$server_name}.local.error.log",
 			"/var/log/httpd/{$server_name}.error.log",
-			"/var/log/nginx/{$server_name}.error.log"
+			"/var/log/nginx/{$server_name}.error.log",
+			"/var/log/apache2/{$server_name}_error.log",
+			"/var/log/httpd/{$server_name}_error.log"
 		];
+		
+		// Add subdomain-specific patterns if it's a subdomain
+		if (strpos($server_name, '.') !== false) {
+			$domain_parts = explode('.', $server_name);
+			if (count($domain_parts) > 2) {
+				// It's a subdomain, add subdomain-specific patterns
+				$subdomain = $domain_parts[0];
+				$main_domain = implode('.', array_slice($domain_parts, 1));
+				
+				// Add subdomain-specific log patterns (higher priority)
+				array_unshift($vhost_patterns, 
+					"/var/log/apache2/{$subdomain}.{$main_domain}.error.log",
+					"/var/log/apache2/{$subdomain}_{$main_domain}.error.log",
+					"/var/log/httpd/{$subdomain}.{$main_domain}.error.log",
+					"/var/log/httpd/{$subdomain}_{$main_domain}.error.log",
+					"/var/log/nginx/{$subdomain}.{$main_domain}.error.log"
+				);
+			}
+		}
 		
 		foreach ($vhost_patterns as $path) {
 			if (file_exists($path) && is_readable($path)) {
@@ -128,9 +155,10 @@ class LogWatch extends CMSModule
 		}
 		
 		// Common server error logs
+		$root_path = defined('CMS_ROOT_PATH') ? CMS_ROOT_PATH : $_SERVER['DOCUMENT_ROOT'];
 		$common_paths = [
-			$_SERVER['DOCUMENT_ROOT'] . '/error_log' => 'Document Root Error Log',
-			$_SERVER['DOCUMENT_ROOT'] . '/../logs/error_log' => 'Parent Logs Directory',
+			$root_path . '/error_log' => 'CMS Root Error Log',
+			dirname($root_path) . '/logs/error_log' => 'Parent Logs Directory',
 			'/var/log/apache2/error.log' => 'Apache Error Log',
 			'/var/log/httpd/error_log' => 'HTTPd Error Log'
 		];
@@ -145,6 +173,39 @@ class LogWatch extends CMSModule
 						'type' => 'server',
 						'exists' => true
 					];
+				}
+			}
+		}
+		
+		// Scan home directory log patterns
+		$home_patterns = [
+			'/home/*/logs/*.log',
+			'/home/*/logs/error*.log'
+		];
+		
+		// Add CMS root-relative patterns
+		if (defined('CMS_ROOT_PATH')) {
+			$root_path = CMS_ROOT_PATH;
+			$home_patterns[] = dirname($root_path) . '/logs/*.log';
+			$home_patterns[] = dirname($root_path) . '/logs/error*.log';
+			$home_patterns[] = dirname(dirname($root_path)) . '/logs/*.log';
+			$home_patterns[] = dirname($root_path) . '/logs/error_log';
+			$home_patterns[] = dirname($root_path) . '/error_log';
+		}
+		
+		foreach ($home_patterns as $pattern) {
+			$files = glob($pattern);
+			if ($files) {
+				foreach ($files as $path) {
+					if (is_readable($path)) {
+						$key = 'home_' . md5($path);
+						$logs[$key] = [
+							'name' => 'Home Log (' . basename($path) . ')',
+							'path' => $path,
+							'type' => 'server',
+							'exists' => true
+						];
+					}
 				}
 			}
 		}
