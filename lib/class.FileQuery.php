@@ -35,41 +35,26 @@ class FileQuery
             return [];
         }
 
-        $logs = [];
-        $content = file_get_contents($this->logfilepath);
-        if ($content === false) {
-            return [];
-        }
-
-        // Split by lines and process each line as a separate entry
-        $lines = explode("\n", $content);
-        $entries = array_filter(array_map('trim', $lines), function($line) {
-            return !empty($line) && strpos($line, '[') === 0;
-        });
-        
-        $i = 0;
-        foreach ($entries as $entry) {
-            $parsedLog = ServerLogParser::parseEntry(trim($entry), $i);
-            if ($parsedLog !== null) {
-                // Handle multiple logs from single entry
-                if (is_array($parsedLog)) {
-                    foreach ($parsedLog as $log) {
-                        $logs[] = $log;
-                        $i++;
-                    }
-                } else {
-                    $logs[] = $parsedLog;
-                    $i++;
-                }
+        // Detect log format by reading first few lines
+        $handle = fopen($this->logfilepath, 'r');
+        $sampleLines = [];
+        for ($i = 0; $i < 5 && !feof($handle); $i++) {
+            $line = trim(fgets($handle));
+            if (!empty($line)) {
+                $sampleLines[] = $line;
             }
         }
-
-        // Sort by timestamp descending (newest first)
-        usort($logs, function($a, $b) {
-            return $b->created - $a->created;
-        });
+        fclose($handle);
         
-        return $logs;
+        // Check if it's PHP error log format
+        foreach ($sampleLines as $line) {
+            if (preg_match('/^\[\d{2}-\w{3}-\d{4}\s+\d{2}:\d{2}:\d{2}\s+[^\]]+\]\s+PHP\s+(Fatal error|Warning|Notice|Parse error|Deprecated):/', $line)) {
+                return PhpLogParser::parseLogFile($this->logfilepath);
+            }
+        }
+        
+        // Default to Apache log parser
+        return ApacheLogParser::parseLogFile($this->logfilepath);
     }
 }
 ?>

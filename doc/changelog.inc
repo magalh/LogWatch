@@ -1,4 +1,12 @@
 <ul>
+ <li>2.0.2 - January 2025
+    <p>- Implemented separate PHP and Apache log parsers for better accuracy</p>
+    <p>- Added PhpLogParser class for multiline PHP error logs with stack traces</p>
+    <p>- Added ApacheLogParser class using Kassner LogParser library</p>
+    <p>- Improved automatic log format detection in FileQuery</p>
+    <p>- Enhanced parsing of PHP error logs with timezone support</p>
+    <p>- Fixed multiline stack trace handling for PHP errors</p>
+  </li>
  <li>2.0.1 - January 2025
     <p>- Added manual log file path configuration for shared hosting compatibility</p>
     <p>- Created separate Filters tab for better UI organization</p>

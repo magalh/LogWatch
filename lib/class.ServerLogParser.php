@@ -33,7 +33,17 @@ class ServerLogParser
             return null;
         }
         
+        // Try new PHP error log format first
+        if (preg_match('/^\[.*?\]\s+PHP\s+(Fatal error|Warning|Notice|Parse error|Deprecated):/', $logEntry)) {
+            return self::parsePhpErrorLog($logEntry, $rowIndex);
+        }
+        
         // Try PHP error log format first: [timestamp] PHP Level: message
+        if (preg_match('/^\[([^\]]+)\]\s+PHP\s+(\w+(?:\s+\w+)*):\s*(.+)$/', $logEntry, $matches)) {
+            return self::parsePHPError($matches, $rowIndex);
+        }
+        
+        // Try original PHP format: [timestamp] PHP Level: message (single word level)
         if (preg_match('/^\[([^\]]+)\]\s+PHP\s+(\w+):\s*(.+)$/', $logEntry, $matches)) {
             return self::parsePHPError($matches, $rowIndex);
         }
@@ -54,6 +64,57 @@ class ServerLogParser
         }
         
         return null;
+    }
+    
+    private static function parsePhpErrorLog($log, $rowIndex)
+    {
+        $lines = preg_split("/\r?\n/", trim($log));
+        $error = [
+            'timestamp' => null,
+            'timezone'  => null,
+            'level'     => null,
+            'message'   => null,
+            'file'      => null,
+            'line'      => null,
+            'stack'     => []
+        ];
+
+        // Main error line
+        if (preg_match(
+            '/^\[(\d{2}-\w{3}-\d{4} \d{2}:\d{2}:\d{2}) ([^\]]+)\]\s+PHP\s+([A-Za-z ]+):\s+(.*?)(?: in (.*?)(?: on line |:)(\d+))?$/',
+            $lines[0],
+            $m
+        )) {
+            $error['timestamp'] = $m[1];
+            $error['timezone']  = $m[2];
+            $error['level']     = trim($m[3]);
+            $error['message']   = trim($m[4]);
+            $error['file']      = $m[5] ?? '';
+            $error['line']      = isset($m[6]) ? (int)$m[6] : 0;
+        }
+
+        // Stack trace
+        foreach ($lines as $line) {
+            if (preg_match('/^#\d+\s+(.*)$/', $line, $m)) {
+                $error['stack'][] = $m[1];
+            }
+        }        
+        $created = strtotime($error['timestamp']);
+        if ($created === false) {
+            $created = time();
+        }
+        
+        $logitem = new stdClass();
+        $logitem->row = $rowIndex;
+        $logitem->created = $created;
+        $logitem->name = 'PHP Error Log';
+        $logitem->type = $error['level'];
+        $logitem->description = $error['message'];
+        $logitem->file = $error['file'];
+        $logitem->line = $error['line'];
+        $logitem->stacktrace = htmlspecialchars($log, ENT_QUOTES);
+        
+        return $logitem;
     }
     
     private static function parsePHPError($matches, $rowIndex)
