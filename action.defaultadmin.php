@@ -61,6 +61,7 @@ echo $this->StartTabHeaders();
 		echo $this->SetTabHeader('filters', "Filters");
 	}
 	echo $this->SetTabHeader('settings',"Settings");
+	echo $this->SetTabHeader('premium',"Premium");
 echo $this->EndTabHeaders();
 
 echo $this->StartTabContent();
@@ -80,6 +81,10 @@ echo $this->StartTabContent();
 
 	echo $this->StartTab('settings');
 	include(__DIR__.'/function.admin_settings_tab.php');
+	echo $this->EndTab();
+
+	echo $this->StartTab('premium');
+	include(__DIR__.'/function.admin_premium.php');
 	echo $this->EndTab();
 echo $this->EndTabContent();
 

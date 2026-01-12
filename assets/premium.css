@@ -1,0 +1,114 @@
+.logwatch_premium_cta {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 20px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.logwatch_premium_cta__top {
+  display: flex;
+  padding: 20px;
+  align-items: center;
+  gap: 20px;
+}
+
+.logwatch_premium_cta__summary {
+  flex: 1;
+}
+
+.logwatch_premium_cta a.button.button-primary.button-hero {
+    font-size: 1.3em;
+    letter-spacing: .03rem;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+}
+.logwatch_premium_cta .button.button-hero {
+    font-size: 14px;
+    min-height: 46px;
+    line-height: 3.14285714;
+    padding: 0 36px;
+}
+.logwatch_premium_cta .button-primary {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+}
+.logwatch_premium_cta .button, .logwatch_premium_cta .button-primary, .logwatch_premium_cta .button-secondary {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 0;
+    padding: 0 10px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    -webkit-appearance: none;
+    border-radius: 3px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.logwatch_premium_cta__summary h2 {
+  margin: 0 0 15px 0;
+  font-size: 24px;
+}
+
+.logwatch_premium_cta__action {
+  text-align: center;
+}
+
+.logwatch_premium_cta__action .ui-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.logwatch_premium_cta__action small {
+  display: block;
+  color: #666;
+  font-size: 12px;
+}
+
+.logwatch_premium_cta__bottom {
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+  padding: 15px 20px;
+}
+
+.premium-upgrade-prompt {
+  margin: 0;
+  color: #666;
+}
+
+.premium-upgrade-prompt a {
+  color: #0073aa;
+  text-decoration: none;
+}
+
+.premium-upgrade-prompt a:hover {
+  text-decoration: underline;
+}
+
+ul.logwatch_premium_description_list {
+    list-style: disc inside!important;
+    margin-left: 0!important;
+}
+.logwatch_premium_description_list {
+    text-align: left;
+    margin: 0;
+    font-size: 12px;
+}
+ul.logwatch_premium_description_list li {
+    display: inline;
+}
+ul.logwatch_premium_description_list li::after {
+    content: " | ";
+}
+.logwatch_premium_cta ul li::after {
+    color: #CCC;
+}
