@@ -1,25 +1,7 @@
 <?php
-#---------------------------------------------------------------------------------------------------
-# Module: LogWatch
-# Authors: Magal Hezi, with CMS Made Simple Foundation.
-# Copyright: (C) 2025 Pixel Solutions, info@pixelsolutions.biz
-# License: GNU General Public License version 2
-#          see /LogWatch/README.md or <http://www.gnu.org/licenses/gpl-2.0.html>
-#---------------------------------------------------------------------------------------------------
-# CMS Made Simple(TM) is (c) CMS Made Simple Foundation 2004-2020 (info@cmsmadesimple.org)
-# Project's homepage is: http://www.cmsmadesimple.org
-#---------------------------------------------------------------------------------------------------
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# However, as a special exception to the GPL, this software is distributed
-# as an addon module to CMS Made Simple. You may not use this software
-# in any Non GPL version of CMS Made simple, or in any version of CMS
-# Made simple that does not indicate clearly and obviously in its admin
-# section that the site was built with CMS Made simple.
-#---------------------------------------------------------------------------------------------------
+#--------------------------------------------------
+# See doc/LICENSE for full license information.
+#--------------------------------------------------
 
 class LogWatch extends CMSModule
 {
@@ -28,7 +10,7 @@ class LogWatch extends CMSModule
 	const EXPORT_LOGS = 'export_logs';
 	
 	public function IsPluginModule() { return true;}
-	public function GetVersion() { return '2.1.0'; }
+	public function GetVersion() { return '2.2.0'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
     public function MinimumCMSVersion() { return '2.2.0'; }
@@ -44,10 +26,9 @@ class LogWatch extends CMSModule
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
 	public function GetAdminSection() { return 'siteadmin'; }
 	public function GetModuleIcon() { return $this->GetModuleURLPath() . '/assets/icon.svg'; }
+	public function GetDependencies() {}
 	
-	public function InitializeAdmin() {
-        //$this->CreateParameter('hid',null,$this->Lang('param_hid'));
-    }
+	public function InitializeAdmin() {}
 
 	 public function InitializeFrontend() {
 		$this->RegisterModulePlugin();
@@ -65,8 +46,7 @@ class LogWatch extends CMSModule
 		
 		parent::__construct();
 
-		$config = \cms_config::get_instance();
-        $smarty = \CmsApp::get_instance()->GetSmarty();
+		$smarty = cmsms()->GetSmarty();
         if( !$smarty ) return;
 
 		$plugins_dir = cms_join_path( $this->GetModulePath(), 'lib', 'plugins' );

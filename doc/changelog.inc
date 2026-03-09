@@ -1,4 +1,16 @@
 <ul>
+ <li>2.2.0 - January 2025
+    <p>- Fixed module class to use modern cmsms()->GetSmarty() API</p>
+    <p>- Added missing GetDependencies() method to module class</p>
+    <p>- Replaced hardcoded HTML in defaultadmin.php with admin_header.tpl template</p>
+    <p>- Fixed ModuleTracker calls to include all required parameters (CMS_VERSION, module version)</p>
+    <p>- Fixed method.upgrade.php to remove deprecated $gCms global variable</p>
+    <p>- Fixed method.uninstall.php to remove all permissions including EXPORT_LOGS</p>
+    <p>- Added Premium tab with upgrade information and feature comparison</p>
+    <p>- Created admin_header.tpl template for cleaner code separation</p>
+    <p>- Added missing language strings for tab labels</p>
+    <p>- Improved code compliance with CMSMS 2.2+ standards</p>
+  </li>
  <li>2.1.0 - January 2025
     <p>- Enhanced log file detection with CMS_ROOT_PATH and CMS_ROOT_URL for better reliability</p>
     <p>- Added comprehensive home directory log scanning patterns</p>
