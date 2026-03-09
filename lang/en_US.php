@@ -53,5 +53,9 @@ $lang['prompt_page'] = 'Page';
 $lang['settings_saved'] = 'Settings saved successfully';
 
 #t
+$lang['tab_filters'] = 'Filters';
+$lang['tab_logs'] = 'Logs';
+$lang['tab_premium'] = 'Premium';
+$lang['tab_settings'] = 'Settings';
 $lang['type'] = 'Type';
 ?>

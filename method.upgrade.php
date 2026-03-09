@@ -1,4 +1,7 @@
 <?php
+#--------------------------------------------------
+# See doc/LICENSE for full license information.
+#--------------------------------------------------
 if (!defined('CMS_VERSION')) exit;
 
 $current_version = $oldversion;
@@ -29,6 +32,8 @@ if (version_compare($current_version, '2.2.0', '<')) {
     
 }
 
-$this->Audit( 0, $this->Lang('friendlyname'), $this->Lang( 'upgraded', $this->GetVersion() ) );
+// Track installation
+include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
+\LogWatch\ModuleTracker::track($this->GetName(), 'upgrade', CMS_VERSION, $this->GetVersion());
 
 ?>

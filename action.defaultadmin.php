@@ -1,4 +1,7 @@
 <?php
+#--------------------------------------------------
+# See doc/LICENSE for full license information.
+#--------------------------------------------------
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 
@@ -28,6 +31,7 @@ if( isset($params['submit']) ) {
         $this->RedirectToAdminTab();
     }
 }
+
 $available_logs = LogWatch::detectAvailableLogFiles();
 $selected_log_source = $this->GetPreference('log_source', '');
 $manual_log_path = $this->GetPreference('manual_log_path', '');
@@ -44,24 +48,21 @@ if ($selected_log_source === 'manual' && !empty($manual_log_path)) {
 
 $has_valid_log_source = !empty($available_logs) && isset($available_logs[$selected_log_source]) && $available_logs[$selected_log_source]['exists'];
 
-echo '<div style="display: flex; align-items: center; margin-bottom: 20px;">';
-echo '<img src="' . $this->GetModuleURLPath() . '/assets/icon.svg" alt="LogWatch" style="width: 96px; height: 96px; margin-right: 10px;">';
-echo '<div>';
-echo '<h2 style="margin: 0;">LogWatch</h2>';
-echo '<p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">' . $this->Lang('admindescription') . '</p>';
-echo '</div>';
-echo '</div>';
+// Display header
+$smarty = cmsms()->GetSmarty();
+$header_tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_header.tpl'), null, null, $smarty);
+$header_tpl->display();
 
 echo $this->StartTabHeaders();
 	if ($has_valid_log_source) {
-		echo $this->SetTabHeader('logs', "Logs");
+		echo $this->SetTabHeader('logs', $this->Lang('tab_logs'));
 		$hidden_count = $this->getHiddenErrorsCount();
-		$hidden_label = "Hidden Errors" . ($hidden_count > 0 ? " ({$hidden_count})" : "");
+		$hidden_label = $this->Lang('tab_hidden') . ($hidden_count > 0 ? " ({$hidden_count})" : "");
 		echo $this->SetTabHeader('hidden', $hidden_label);
-		echo $this->SetTabHeader('filters', "Filters");
+		echo $this->SetTabHeader('filters', $this->Lang('tab_filters'));
 	}
-	echo $this->SetTabHeader('settings',"Settings");
-	echo $this->SetTabHeader('premium',"Premium");
+	echo $this->SetTabHeader('settings', $this->Lang('tab_settings'));
+	echo $this->SetTabHeader('premium', $this->Lang('tab_premium'));
 echo $this->EndTabHeaders();
 
 echo $this->StartTabContent();
@@ -82,9 +83,9 @@ echo $this->StartTabContent();
 	echo $this->StartTab('settings');
 	include(__DIR__.'/function.admin_settings_tab.php');
 	echo $this->EndTab();
-
+	
 	echo $this->StartTab('premium');
-	include(__DIR__.'/function.admin_premium.php');
+	include(__DIR__.'/function.admin_premium_tab.php');
 	echo $this->EndTab();
 echo $this->EndTabContent();
 
