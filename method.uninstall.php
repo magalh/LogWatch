@@ -11,5 +11,5 @@ $this->RemovePreference();
 
 // Track installation
 include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
-ModuleTracker::track($this->GetName(), 'uninstall', CMS_VERSION, $this->GetVersion());
+\LogWatch\ModuleTracker::track($this->GetName(), 'uninstall', CMS_VERSION, $this->GetVersion());
 ?>

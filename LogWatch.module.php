@@ -21,10 +21,10 @@ class LogWatch extends CMSModule
         return $this->CheckPermission(self::MANAGE_PERM) || $this->CheckPermission(self::EXPORT_LOGS);
     }
 
-	public function GetAuthor() { return 'Magal Hezi'; }
-	public function GetAuthorEmail() { return 'magal@pixelsolutions.biz'; }
+    public function GetAuthor() { return 'Pixel Solutions'; }
+    public function GetAuthorEmail() { return 'info@pixelsolutions.biz'; }
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
-	public function GetAdminSection() { return 'siteadmin'; }
+	public function GetAdminSection() { return 'extensions'; }
 	public function GetModuleIcon() { return $this->GetModuleURLPath() . '/assets/icon.svg'; }
 	public function GetDependencies() {}
 	

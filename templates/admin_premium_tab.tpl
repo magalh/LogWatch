@@ -1,4 +1,4 @@
-<style>
+{literal}<style>
 a.cta{display:inline-block;position:relative;margin:10px 0;line-height:26px;text-decoration:none;padding:0 8px 0 24px;clear:both;text-align:left}
 a.cta .ui-myicon{position:absolute;left:1px;top:3px;color:#FFF!important}
 a.cta .ui-myicon.my-icon-star{background:none;width:20px;height:20px;font-size:20px;line-height:20px;text-align:center}
@@ -19,7 +19,7 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
 .cta__action{position:relative;text-align:center}
 .cta__top h2{font-size:28px;font-weight:200;line-height:1;margin:0 0 5px;letter-spacing:.05rem;color:#7CB342}
 .lifted{border:1px solid rgba(0,0,0,.1);box-shadow:0 1px 1px 0 rgba(0,0,0,.1)}
-</style>
+</style>{/literal}
 
 <div class="pagecontainer">
 <section class="premium" style="margin-top: 20px; border-left: 4px solid #1e88e5;">

@@ -22,6 +22,6 @@ if (!empty($available_logs)) {
 
 // Track installation
 include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
-ModuleTracker::track($this->GetName(), 'install', CMS_VERSION, $this->GetVersion());
+\LogWatch\ModuleTracker::track($this->GetName(), 'install', CMS_VERSION, $this->GetVersion());
 
 ?>

@@ -26,6 +26,6 @@ if( version_compare($oldversion,'2.0.0') < 0 ) {
 
 // Track installation
 include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
-ModuleTracker::track($this->GetName(), 'upgrade', CMS_VERSION, $this->GetVersion());
+\LogWatch\ModuleTracker::track($this->GetName(), 'upgrade', CMS_VERSION, $this->GetVersion());
 
 ?>
