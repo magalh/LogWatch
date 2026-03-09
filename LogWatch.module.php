@@ -195,7 +195,7 @@ class LogWatch extends CMSModule
 	
 	public function hideError($error_hash, $file, $line, $message, $notes = '')
 	{
-		if (empty($error_hash) || empty($file) || empty($message)) return false;
+		if (empty($error_hash) || empty($message)) return false;
 		
 		$user_id = get_userid();
 		$db = $this->GetDb();
@@ -203,7 +203,7 @@ class LogWatch extends CMSModule
 				(error_hash, file_path, line_number, error_message, hidden_by, hidden_date, notes) 
 				VALUES (?, ?, ?, ?, ?, NOW(), ?)";
 		
-		return $db->Execute($sql, [$error_hash, $file, $line, $message, $user_id, $notes]);
+		return $db->Execute($sql, [$error_hash, $file ?: null, $line ?: null, $message, $user_id, $notes]);
 	}
 	
 	public function unhideError($error_hash)
@@ -217,7 +217,10 @@ class LogWatch extends CMSModule
 	
 	public function isErrorHidden($log)
 	{
-		$error_hash = md5($log->file . ':' . $log->line . ':' . trim($log->description));
+		$file = $log->file ?? '';
+		$line = $log->line ?? '';
+		$description = trim($log->description ?? '');
+		$error_hash = md5($file . ':' . $line . ':' . $description);
 		
 		$db = $this->GetDb();
 		$sql = "SELECT id FROM " . cms_db_prefix() . "module_logwatch_hidden WHERE error_hash = ?";
@@ -228,7 +231,10 @@ class LogWatch extends CMSModule
 	
 	public function getErrorHash($log)
 	{
-		return md5($log->file . ':' . $log->line . ':' . trim($log->description));
+		$file = $log->file ?? '';
+		$line = $log->line ?? '';
+		$description = trim($log->description ?? '');
+		return md5($file . ':' . $line . ':' . $description);
 	}
 	
 	public function getHiddenErrorsCount()
