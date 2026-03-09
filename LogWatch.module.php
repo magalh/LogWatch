@@ -6,6 +6,7 @@
 class LogWatch extends CMSModule
 {
 	const MANAGE_PERM = 'manage_LogWatch';
+	const MANAGE_PRO_PERM = 'manage_logwatch_pro';
 	const CLEAR_LOGS = 'clear_logs';
 	const EXPORT_LOGS = 'export_logs';
 	
