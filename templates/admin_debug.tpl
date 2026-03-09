@@ -49,7 +49,8 @@
     </table>
     
     <h3 style="margin-top: 20px;">Test Error Triggers</h3>
-    <p>Use these buttons to generate test errors for debugging purposes:</p>
+    <p>Use these buttons to generate test errors for debugging purposes. After triggering, you'll be redirected to the Logs tab.</p>
+    <p><strong>Note:</strong> The error you see in Apache logs is being logged. If it doesn't appear in LogWatch, check that your selected log source matches where PHP is writing errors.</p>
     
     <div style="margin: 15px 0;">
         {form_start}

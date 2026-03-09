@@ -5,18 +5,30 @@ if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 // Handle test error triggers
 if (isset($params['submit_1'])) {
     $uninitialized_variable = $undefinedVariable; // Notice
+    sleep(1); // Wait for log to be written
+    $this->SetMessage('Notice triggered - check logs tab');
+    $this->RedirectToAdminTab('logs');
 }
 if (isset($params['submit_2'])) {
-    $result = 1 / 0; // Warning
+    @($result = 1 / 0); // Warning
+    sleep(1); // Wait for log to be written
+    $this->SetMessage('Warning triggered - check logs tab');
+    $this->RedirectToAdminTab('logs');
 }
 if (isset($params['submit_3'])) {
     trigger_error('This is a user error', E_USER_ERROR);
 }
 if (isset($params['submit_4'])) {
     trigger_error('This is a user warning', E_USER_WARNING);
+    sleep(1); // Wait for log to be written
+    $this->SetMessage('User warning triggered - check logs tab');
+    $this->RedirectToAdminTab('logs');
 }
 if (isset($params['submit_5'])) {
     trigger_error('This is a user notice', E_USER_NOTICE);
+    sleep(1); // Wait for log to be written
+    $this->SetMessage('User notice triggered - check logs tab');
+    $this->RedirectToAdminTab('logs');
 }
 
 $smarty = cmsms()->GetSmarty();
