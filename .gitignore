@@ -3,3 +3,5 @@ moduleinfo.ini
 .amazonq
 releases/
 build.sh
+export_xml.php
+*.tar.gz
