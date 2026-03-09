@@ -22,22 +22,21 @@
 #---------------------------------------------------------------------------------------------------
 
 function smarty_modifier_typeicon($type) {
-    $config = cms_config::get_instance();
-    $base_url = $config['admin_url'] . '/themes/OneEleven/images/icons/system/';
-    $extra_url = $config['admin_url'] . '/themes/OneEleven/images/icons/extra/';
+    $mod = cms_utils::get_module('LogWatch');
+    $icon_url = $mod->GetModuleURLPath() . '/assets/icons/';
     
     $icons = [
-        'Fatal error' => '<img src="' . $base_url . 'stop.gif" alt="Fatal Error" title="Fatal Error" style="width:16px;height:16px;">',
-        'Warning' => '<img src="' . $base_url . 'warning.gif" alt="Warning" title="Warning" style="width:16px;height:16px;">', 
-        'Notice' => '<img src="' . $base_url . 'info.gif" alt="Notice" title="Notice" style="width:16px;height:16px;">',
-        'Deprecated' => '<img src="' . $extra_url . 'yellow.gif" alt="Deprecated" title="Deprecated" style="width:16px;height:16px;">',
-        'Error' => '<img src="' . $base_url . 'delete.gif" alt="Error" title="Error" style="width:16px;height:16px;">',
-        'Fatal' => '<img src="' . $base_url . 'stop.gif" alt="Fatal" title="Fatal" style="width:16px;height:16px;">',
-        'Crit' => '<img src="' . $base_url . 'stop.gif" alt="Critical" title="Critical" style="width:16px;height:16px;">',
-        'Alert' => '<img src="' . $base_url . 'warning.gif" alt="Alert" title="Alert" style="width:16px;height:16px;">',
-        'Emerg' => '<img src="' . $base_url . 'stop.gif" alt="Emergency" title="Emergency" style="width:16px;height:16px;">'  
+        'Fatal error' => '<img src="' . $icon_url . 'fatal.svg" alt="Fatal Error" title="Fatal Error" style="width:16px;height:16px;">',
+        'Warning' => '<img src="' . $icon_url . 'warning.svg" alt="Warning" title="Warning" style="width:16px;height:16px;">', 
+        'Notice' => '<img src="' . $icon_url . 'notice.svg" alt="Notice" title="Notice" style="width:16px;height:16px;">',
+        'Deprecated' => '<img src="' . $icon_url . 'deprecated.svg" alt="Deprecated" title="Deprecated" style="width:16px;height:16px;">',
+        'Error' => '<img src="' . $icon_url . 'error.svg" alt="Error" title="Error" style="width:16px;height:16px;">',
+        'Fatal' => '<img src="' . $icon_url . 'fatal.svg" alt="Fatal" title="Fatal" style="width:16px;height:16px;">',
+        'Crit' => '<img src="' . $icon_url . 'fatal.svg" alt="Critical" title="Critical" style="width:16px;height:16px;">',
+        'Alert' => '<img src="' . $icon_url . 'warning.svg" alt="Alert" title="Alert" style="width:16px;height:16px;">',
+        'Emerg' => '<img src="' . $icon_url . 'fatal.svg" alt="Emergency" title="Emergency" style="width:16px;height:16px;">'  
     ];
     
-    return $icons[$type] ?? '<img src="' . $base_url . 'info.gif" alt="Unknown" title="Unknown" style="width:16px;height:16px;">';
+    return $icons[$type] ?? '<img src="' . $icon_url . 'notice.svg" alt="Unknown" title="Unknown" style="width:16px;height:16px;">';
 }
 ?>
