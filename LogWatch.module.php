@@ -193,35 +193,11 @@ class LogWatch extends CMSModule
 		return $logs;
 	}
 	
-	public function hideError($file, $line, $message, $notes = '')
+	public function hideError($error_hash, $file, $line, $message, $notes = '')
 	{
-		$error_hash = md5($file . ':' . $line . ':' . trim($message));
+		if (empty($error_hash) || empty($file) || empty($message)) return false;
+		
 		$user_id = get_userid();
-		
-		$db = $this->GetDb();
-		$sql = "INSERT IGNORE INTO " . cms_db_prefix() . "module_logwatch_hidden 
-				(error_hash, file_path, line_number, error_message, hidden_by, hidden_date, notes) 
-				VALUES (?, ?, ?, ?, ?, NOW(), ?)";
-		
-		return $db->Execute($sql, [$error_hash, $file, $line, $message, $user_id, $notes]);
-	}
-	
-	public function hideErrorByHash($error_hash, $notes = '')
-	{
-		$user_id = get_userid();
-		
-		$db = $this->GetDb();
-		$sql = "INSERT IGNORE INTO " . cms_db_prefix() . "module_logwatch_hidden 
-				(error_hash, hidden_by, hidden_date, notes) 
-				VALUES (?, ?, NOW(), ?)";
-		
-		return $db->Execute($sql, [$error_hash, $user_id, $notes]);
-	}
-	
-	public function hideErrorComplete($error_hash, $file, $line, $message, $notes = '')
-	{
-		$user_id = get_userid();
-		
 		$db = $this->GetDb();
 		$sql = "INSERT IGNORE INTO " . cms_db_prefix() . "module_logwatch_hidden 
 				(error_hash, file_path, line_number, error_message, hidden_by, hidden_date, notes) 
@@ -232,6 +208,8 @@ class LogWatch extends CMSModule
 	
 	public function unhideError($error_hash)
 	{
+		if (empty($error_hash)) return false;
+		
 		$db = $this->GetDb();
 		$sql = "DELETE FROM " . cms_db_prefix() . "module_logwatch_hidden WHERE error_hash = ?";
 		return $db->Execute($sql, [$error_hash]);

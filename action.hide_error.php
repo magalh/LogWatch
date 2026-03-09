@@ -9,10 +9,10 @@ if (isset($params['hide_error'])) {
     $message = $params['message'] ?? '';
     $notes = $params['notes'] ?? '';
     
-    if (!empty($error_hash) && $this->hideErrorComplete($error_hash, $file, $line, $message, $notes)) {
-        $this->SetMessage('Error marked as fixed');
+    if ($this->hideError($error_hash, $file, $line, $message, $notes)) {
+        $this->SetMessage($this->Lang('error_hidden'));
     } else {
-        $this->SetError('Failed to hide error');
+        $this->SetError($this->Lang('error_hide_failed'));
     }
     
     $this->RedirectToAdminTab();
@@ -22,11 +22,11 @@ if (isset($params['unhide_error'])) {
     $error_hash = $params['error_hash'] ?? '';
     
     if ($this->unhideError($error_hash)) {
-        $this->SetMessage('Error unhidden');
+        $this->SetMessage($this->Lang('error_unhidden'));
     } else {
-        $this->SetError('Failed to unhide error');
+        $this->SetError($this->Lang('error_unhide_failed'));
     }
     
-    $this->RedirectToAdminTab();
+    $this->RedirectToAdminTab('hidden');
 }
 ?>

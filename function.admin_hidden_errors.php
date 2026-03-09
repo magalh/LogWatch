@@ -5,6 +5,7 @@ if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 $error = 0;
 $message = '';
 
+$smarty = cmsms()->GetSmarty();
 $tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_hidden_errors.tpl'),null,null,$smarty);
 
 // Get hidden errors from database

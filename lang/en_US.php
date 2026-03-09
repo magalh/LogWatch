@@ -9,6 +9,8 @@ $lang['date'] = 'Date';
 $lang['description'] = 'LogWatch helps developers troubleshoot PHP errors by providing a clean, organized view of server error logs. Monitor Fatal errors, Warnings, Notices, and Deprecated functions directly from your CMS admin panel.';
 
 #e
+$lang['error_hidden'] = 'Error marked as fixed and hidden from logs';
+$lang['error_hide_failed'] = 'Failed to hide error';
 $lang['error_log_file_not_found'] = 'Log file error!';
 $lang['error_log_file_manual'] = 'The manual log file could not be loaded: %s';
 $lang['error_log_file_selected'] = 'The selected log file could not be loaded: %s';
@@ -26,6 +28,8 @@ $lang['error_no_log_sources'] = <<<EOT
 LogWatch could not automatically detect any readable error log files on your server. This can happen on shared hosting or when log files are in non-standard locations.<br/>
 Please use the manual log path option below to specify the full path to your error log file.
 EOT;
+$lang['error_unhidden'] = 'Error restored to logs view';
+$lang['error_unhide_failed'] = 'Failed to unhide error';
 $lang['export_csv'] = 'Export CSV';
 
 #f
@@ -54,6 +58,7 @@ $lang['settings_saved'] = 'Settings saved successfully';
 
 #t
 $lang['tab_filters'] = 'Filters';
+$lang['tab_hidden'] = 'Hidden Errors';
 $lang['tab_logs'] = 'Logs';
 $lang['tab_premium'] = 'Premium';
 $lang['tab_settings'] = 'Settings';
