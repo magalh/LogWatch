@@ -45,7 +45,7 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
         <div class="cta__bottom">
             <p class="premium-upgrade-prompt">
                 You are currently using the Free version of LogWatch. 
-                Upgrade to Pro for advanced filtering, real-time monitoring, email alerts, and priority support.
+                Upgrade to Pro for Slack/Discord integration, error grouping, performance metrics, scheduled reports, and more.
             </p>
         </div>
     </div>
@@ -56,33 +56,33 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
-        <h4>🔔 Real-Time Alerts</h4>
-        <p>Get instant email notifications when critical errors occur on your server.</p>
+        <h4>💬 Slack/Discord Integration</h4>
+        <p>Send error notifications directly to your team's Slack or Discord channels for instant collaboration.</p>
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
-        <h4>🔍 Advanced Filtering</h4>
-        <p>Filter logs by date range, severity level, file path, and custom regex patterns.</p>
+        <h4>🔗 Custom Error Grouping</h4>
+        <p>Automatically group similar errors together to identify patterns and reduce noise in your logs.</p>
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
-        <h4>📊 Analytics Dashboard</h4>
-        <p>Visualize error trends with charts and graphs to identify recurring issues.</p>
+        <h4>⚡ Performance Metrics</h4>
+        <p>Track response times, memory usage, and execution performance alongside error logs.</p>
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
-        <h4>🗄️ Log Archiving</h4>
-        <p>Automatically archive and compress old logs to save disk space.</p>
+        <h4>📧 Scheduled Reports</h4>
+        <p>Receive automated daily or weekly error summaries via email with actionable insights.</p>
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
-        <h4>👥 Multi-User Access</h4>
-        <p>Grant different permission levels to team members for collaborative debugging.</p>
+        <h4>🙈 Hide Errors</h4>
+        <p>Mark known or resolved errors as hidden to keep your log view clean and focused on new issues.</p>
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
         <h4>🎯 Priority Support</h4>
-        <p>Get direct access to our development team for technical assistance.</p>
+        <p>Get direct access to our development team for technical assistance and feature requests.</p>
     </div>
 </div>
 </div>
