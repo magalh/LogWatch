@@ -68,4 +68,12 @@ $lang['tab_logs'] = 'Logs';
 $lang['tab_premium'] = 'Premium';
 $lang['tab_settings'] = 'Settings';
 $lang['type'] = 'Type';
+
+#h
+$lang['help_general'] = 'General';
+$lang['help_features'] = 'Features';
+$lang['help_configuration'] = 'Configuration';
+$lang['help_pro_features'] = 'Pro Features';
+$lang['help_upgrade'] = 'Upgrade to Pro';
+$lang['help_troubleshooting'] = 'Troubleshooting';
 ?>

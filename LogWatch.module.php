@@ -27,8 +27,7 @@ class LogWatch extends CMSModule
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
 	public function GetAdminSection() { return 'extensions'; }
 	public function GetModuleIcon() { return $this->GetModuleURLPath() . '/assets/icon.svg'; }
-	public function GetDependencies() {}
-	
+	public function GetDependencies() { return []; }
 	public function InitializeAdmin() {}
 
 	 public function InitializeFrontend() {
@@ -246,14 +245,24 @@ class LogWatch extends CMSModule
 		
 		return $result ? (int)$result->fields['count'] : 0;
 	}
+
 	
     public function GetHelp() {
-        $base_dir = realpath(__DIR__);
-        $file = realpath(__DIR__.'/README.md');
-        if (!$file || !$base_dir || !is_file($file) || !is_readable($file)) return '';
-        if (strpos($file, $base_dir) !== 0) return '';
-        if (basename($file) !== 'README.md') return '';
-        return @file_get_contents($file);
+        $mods = \ModuleOperations::get_instance()->GetInstalledModules();
+		$logwatch = $this;
+        $have_pro = in_array('LogWatchPro', $mods);
+        
+        $smarty = \cms_utils::get_smarty();
+		$smarty->assign('logwatch', $logwatch);
+        $smarty->assign('have_pro', $have_pro);
+        
+        $tpl_file = cms_join_path($this->GetModulePath(), 'templates', 'help.tpl');
+        if (file_exists($tpl_file)) {
+            $tpl = $smarty->CreateTemplate($this->GetTemplateResource('help.tpl'));
+            return $tpl->fetch();
+        }
+        
+        return '';
     }
 
     public function GetChangeLog() {
