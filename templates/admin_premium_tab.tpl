@@ -1,3 +1,13 @@
+{if $pro_installed}
+    <div class="pagecontainer">
+        <div class="information" style="margin: 20px 0;">
+            <h3>LogWatch Pro is Installed</h3>
+            <p>To configure LogWatch Pro features including Slack/Discord integrations, please visit:</p>
+            <p><a href="{cms_action_url module='LogWatchPro' action='defaultadmin'}" class="ui-button ui-widget ui-state-default ui-corner-all">Go to LogWatch Pro Settings</a></p>
+        </div>
+    </div>
+{else}
+{* LogWatchPro not installed - show upsell *}
 {literal}<style>
 a.cta{display:inline-block;position:relative;margin:10px 0;line-height:26px;text-decoration:none;padding:0 8px 0 24px;clear:both;text-align:left}
 a.cta .ui-myicon{position:absolute;left:1px;top:3px;color:#FFF!important}
@@ -86,3 +96,4 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
     </div>
 </div>
 </div>
+{/if}

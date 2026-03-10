@@ -1,4 +1,50 @@
 <div class="pagecontainer">
+    <h3>Module Preferences</h3>
+    
+    <h4>LogWatch Preferences</h4>
+    <table class="pagetable">
+        <thead>
+            <tr>
+                <th style="width: 40%;">Preference Name</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $basic_prefs as $pref}
+            <tr class="{cycle values='row1,row2'}">
+                <td><code>{$pref.name}</code></td>
+                <td>{$pref.value|default:'<em>empty</em>'}</td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+    
+    {if $pro_installed}
+    <h4 style="margin-top: 20px;">LogWatchPro Preferences</h4>
+    <table class="pagetable">
+        <thead>
+            <tr>
+                <th style="width: 40%;">Preference Name</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $pro_prefs as $pref}
+            <tr class="{cycle values='row1,row2'}">
+                <td><code>{$pref.name}</code></td>
+                <td>{$pref.value|default:'<em>empty</em>'}</td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+    {/if}
+    
+    <div style="margin: 20px 0;">
+        <a href="{$clear_url}" class="ui-button ui-widget ui-state-default ui-corner-all" onclick="return confirm('Are you sure you want to clear all preferences?');">
+            Clear All Preferences
+        </a>
+    </div>
+    
     <h3>Debug Information</h3>
     
     <table class="pagetable">
@@ -59,6 +105,7 @@
             <input type="submit" name="{$actionid}submit_3" value="Trigger User Error" style="margin: 5px;" />
             <input type="submit" name="{$actionid}submit_4" value="Trigger User Warning" style="margin: 5px;" />
             <input type="submit" name="{$actionid}submit_5" value="Trigger User Notice" style="margin: 5px;" />
+            <input type="submit" name="{$actionid}submit_fatal" value="Trigger Fatal Error (Test Notifications)" style="margin: 5px; background: #d9534f; color: white;" onclick="return confirm('This will trigger a fatal error and test your notification settings. Continue?');" />
         {form_end}
     </div>
     

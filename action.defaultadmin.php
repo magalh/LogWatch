@@ -62,7 +62,21 @@ echo $this->StartTabHeaders();
 		echo $this->SetTabHeader('filters', $this->Lang('tab_filters'));
 	}
 	echo $this->SetTabHeader('settings', $this->Lang('tab_settings'));
-	echo $this->SetTabHeader('premium', $this->Lang('tab_premium'));
+	
+	// LogWatchPro tabs
+	$pro_mod = cms_utils::get_module('LogWatchPro');
+	$pro_installed = ($pro_mod !== false);
+	$pro_enabled = $pro_installed && $pro_mod->IsProEnabled();
+	
+	if ($pro_installed && $pro_enabled) {
+		echo $this->SetTabHeader('integrations', 'Integrations');
+	}
+	
+	if ($pro_installed) {
+		echo $this->SetTabHeader('license', 'License');
+	} else {
+		echo $this->SetTabHeader('premium', $this->Lang('tab_premium'));
+	}
 	
 	$config = cms_config::get_instance();
 	if ($this->CheckPermission(LogWatch::MANAGE_PERM) && isset($config['logwatch_debug_mode']) && $config['logwatch_debug_mode'] == '1') {
@@ -89,9 +103,22 @@ echo $this->StartTabContent();
 	include(__DIR__.'/function.admin_settings_tab.php');
 	echo $this->EndTab();
 	
-	echo $this->StartTab('premium');
-	include(__DIR__.'/function.admin_premium_tab.php');
-	echo $this->EndTab();
+	// LogWatchPro tabs
+	if ($pro_installed && $pro_enabled) {
+		echo $this->StartTab('integrations', $params);
+		include($pro_mod->GetModulePath() . '/function.admin_integrations.php');
+		echo $this->EndTab();
+	}
+	
+	if ($pro_installed) {
+		echo $this->StartTab('license', $params);
+		include($pro_mod->GetModulePath() . '/function.admin_license.php');
+		echo $this->EndTab();
+	} else {
+		echo $this->StartTab('premium');
+		include(__DIR__.'/function.admin_premium_tab.php');
+		echo $this->EndTab();
+	}
 	
 	$config = cms_config::get_instance();
 	if ($this->CheckPermission(LogWatch::MANAGE_PERM) && isset($config['logwatch_debug_mode']) && $config['logwatch_debug_mode'] == '1') {

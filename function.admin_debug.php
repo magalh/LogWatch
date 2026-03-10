@@ -2,6 +2,42 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission(LogWatch::MANAGE_PERM) ) return;
 
+$logwatch_pro = cms_utils::get_module('LogWatchPro');
+
+// Handle clear preferences
+if (isset($params['clear_all_prefs'])) {
+    $basic_prefs = [
+        'log_source',
+        'manual_log_path',
+        'logsettings'
+    ];
+    
+    $pro_prefs = [
+        'logwatchpro_license_key',
+        'logwatchpro_enabled',
+        'logwatchpro_license_verified',
+        'logwatchpro_slack_enabled',
+        'logwatchpro_slack_webhook_url',
+        'logwatchpro_discord_enabled',
+        'logwatchpro_discord_webhook_url',
+        'logwatchpro_error_grouping_enabled',
+        'logwatchpro_performance_metrics_enabled',
+        'logwatchpro_scheduled_reports_enabled'
+    ];
+    
+    foreach ($basic_prefs as $pref) {
+        $this->RemovePreference($pref);
+    }
+    if ($logwatch_pro) {
+        foreach ($pro_prefs as $pref) {
+            $logwatch_pro->RemovePreference($pref);
+        }
+    }
+    $this->SetMessage('All preferences cleared');
+    $this->RedirectToAdminTab('debug');
+    return;
+}
+
 // Handle test error triggers
 if (isset($params['submit_1'])) {
     $uninitialized_variable = $undefinedVariable; // Notice
@@ -30,9 +66,51 @@ if (isset($params['submit_5'])) {
     $this->SetMessage('User notice triggered - check logs tab');
     $this->RedirectToAdminTab('logs');
 }
+if (isset($params['submit_fatal'])) {
+    trigger_error('This is a test fatal error for notifications', E_USER_ERROR);
+}
 
 $smarty = cmsms()->GetSmarty();
 $tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_debug.tpl'), null, null, $smarty);
+
+// Basic preferences
+$basic_prefs = [
+    'log_source',
+    'manual_log_path',
+    'logsettings'
+];
+
+$basic_prefs_data = [];
+foreach ($basic_prefs as $pref) {
+    $val = $this->GetPreference($pref, '');
+    $basic_prefs_data[] = ['name' => $pref, 'value' => $val];
+}
+
+// Pro preferences
+$pro_prefs = [
+    'logwatchpro_license_key',
+    'logwatchpro_enabled',
+    'logwatchpro_license_verified',
+    'logwatchpro_slack_enabled',
+    'logwatchpro_slack_webhook_url',
+    'logwatchpro_discord_enabled',
+    'logwatchpro_discord_webhook_url',
+    'logwatchpro_notify_types',
+    'logwatchpro_error_grouping_enabled',
+    'logwatchpro_performance_metrics_enabled',
+    'logwatchpro_scheduled_reports_enabled'
+];
+
+$pro_prefs_data = [];
+if ($logwatch_pro) {
+    foreach ($pro_prefs as $pref) {
+        $val = $logwatch_pro->GetPreference($pref, '');
+        if (strpos($pref, 'license_key') !== false || strpos($pref, 'webhook') !== false) {
+            $val = $val ? '***' : '';
+        }
+        $pro_prefs_data[] = ['name' => $pref, 'value' => $val];
+    }
+}
 
 // Debug information
 $debug_info = [
@@ -49,5 +127,9 @@ $debug_info = [
 ];
 
 $tpl->assign('debug_info', $debug_info);
+$tpl->assign('basic_prefs', $basic_prefs_data);
+$tpl->assign('pro_prefs', $pro_prefs_data);
+$tpl->assign('pro_installed', $logwatch_pro !== false);
+$tpl->assign('clear_url', $this->create_url('m1_', 'defaultadmin', '', ['active_tab' => 'debug', 'clear_all_prefs' => '1']));
 $tpl->display();
 ?>
