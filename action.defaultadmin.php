@@ -73,6 +73,7 @@ echo $this->StartTabHeaders();
 	
 	if ($pro_installed && $pro_enabled) {
 		echo $this->SetTabHeader('integrations', 'Integrations');
+		echo $this->SetTabHeader('notifications', 'Notification History');
 	}
 	
 	if ($pro_installed) {
@@ -110,6 +111,10 @@ echo $this->StartTabContent();
 	if ($pro_installed && $pro_enabled) {
 		echo $this->StartTab('integrations', $params);
 		include($pro_mod->GetModulePath() . '/function.admin_integrations.php');
+		echo $this->EndTab();
+		
+		echo $this->StartTab('notifications', $params);
+		include($pro_mod->GetModulePath() . '/function.admin_notifications.php');
 		echo $this->EndTab();
 	}
 	
