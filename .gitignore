@@ -5,3 +5,5 @@ releases/
 build.sh
 export_xml.php
 *.tar.gz
+composer.json
+composer.lockcomposer.lock
