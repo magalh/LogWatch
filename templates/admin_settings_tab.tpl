@@ -58,14 +58,15 @@
 </div>
 {/if}
 
-{if !$pro_available && (empty($available_logs) || ($selected_log_source && isset($selected_log_info) && !$selected_log_info.exists))}
+{if !$pro_enabled}
 <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 15px 0;">
-    <h4 style="margin-top: 0;">💡 No Log File Access? Try LogWatch Pro!</h4>
-    <p>LogWatchPro works even without server log file access. It captures errors in real-time and provides:</p>
+    <h4 style="margin-top: 0;">💡 Upgrade to LogWatch Pro!</h4>
+    <p>LogWatchPro provides advanced error monitoring capabilities:</p>
     <ul>
-        <li>Instant notifications via Slack, Discord, or Email</li>
+        <li>Real-time notifications via Slack, Discord, or Email</li>
         <li>Error grouping and analytics dashboard</li>
         <li>Notification history tracking</li>
+        <li>Works even without server log file access</li>
     </ul>
     <p style="margin-bottom: 0;"><a href="https://pixelsolutions.biz/plugins/logwatch-pro" target="_blank" style="font-weight: bold;">Learn More →</a></p>
 </div>
@@ -73,7 +74,7 @@
 
 {form_start}
 
-{if $pro_available}
+{if $pro_enabled}
 <div class="pageoverflow" style="background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-left: 4px solid {if $pro_active}#4caf50{else}#ff9800{/if};">
     <p class="pagetext" style="font-weight: bold;">{$mod->Lang('logwatch_pro_status')}:</p>
     <p class="pageinput">

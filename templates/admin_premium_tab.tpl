@@ -1,4 +1,4 @@
-{if $pro_installed}
+{if $pro_available}
     <div class="pagecontainer">
         <div class="information" style="margin: 20px 0;">
             <h3>LogWatch Pro is Installed</h3>
@@ -40,7 +40,7 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
                     LogWatch <strong>Pro</strong>
                 </h2>
                 <ul class="description_list">
-                    <li><a href="https://pixelsolutions.biz/en/plugins/logwatch" target="_blank">View full Pro feature list</a></li>
+                    <li><a href="https://pixelsolutions.biz/plugins/logwatch" target="_blank">View full Pro feature list</a></li>
                     <li><a href="https://pixelsolutions.biz/support" target="_blank">Professional support options</a></li>
                     <li><a href="https://pixelsolutions.biz/documentation/logwatch" target="_blank">Technical documentation</a></li>
                 </ul>
@@ -55,14 +55,14 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
         <div class="cta__bottom">
             <p class="premium-upgrade-prompt">
                 You are currently using the Free version of LogWatch. 
-                Upgrade to Pro for Slack/Discord integration, error grouping, performance metrics, scheduled reports, and more.
+                Upgrade to Pro for real-time notifications, error grouping, performance metrics, and priority support.
             </p>
         </div>
     </div>
 </section>
 
 <h3>Upgrade to LogWatch Pro</h3>
-<p>Unlock enterprise-grade features with LogWatch Pro:</p>
+<p>Unlock enterprise-grade error monitoring features with LogWatch Pro:</p>
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
@@ -71,8 +71,18 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
-        <h4>🔗 Custom Error Grouping</h4>
+        <h4>📧 Email Notifications</h4>
+        <p>Receive instant email alerts when critical errors occur with detailed error information and stack traces.</p>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+        <h4>🔗 Smart Error Grouping</h4>
         <p>Automatically group similar errors together to identify patterns and reduce noise in your logs.</p>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+        <h4>📊 Analytics Dashboard</h4>
+        <p>Visualize error trends, frequency patterns, and identify the most problematic areas of your application.</p>
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
@@ -86,8 +96,28 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
-        <h4>🙈 Hide Errors</h4>
-        <p>Mark known or resolved errors as hidden to keep your log view clean and focused on new issues.</p>
+        <h4>🔔 Notification History</h4>
+        <p>Track all sent notifications with delivery status and timestamps for audit purposes.</p>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+        <h4>⏰ Rate Limiting</h4>
+        <p>Prevent notification spam with intelligent rate limiting and quiet hours configuration.</p>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+        <h4>🎯 Error Level Filtering</h4>
+        <p>Configure which error types trigger notifications (Fatal, Warning, Notice, Deprecated).</p>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+        <h4>🚀 Real-Time Error Capture</h4>
+        <p>Capture errors in real-time even without server log file access using PHP error handlers.</p>
+    </div>
+    
+    <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+        <h4>🔐 License Management</h4>
+        <p>Easy license activation and management with automatic validation and renewal reminders.</p>
     </div>
     
     <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
@@ -95,5 +125,22 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
         <p>Get direct access to our development team for technical assistance and feature requests.</p>
     </div>
 </div>
+
+<div style="background: #f0f8ff; border: 2px solid #4a90e2; padding: 20px; border-radius: 5px; margin: 20px 0;">
+    <h4 style="margin-top: 0;">How to Upgrade</h4>
+    <ol>
+        <li>Purchase LogWatch Pro license at <a href="https://pixelsolutions.biz/plugins/logwatch" target="_blank">pixelsolutions.biz</a></li>
+        <li>Download and install the LogWatchPro module</li>
+        <li>Enter your license key in the License tab</li>
+        <li>All premium features will be unlocked automatically in this interface</li>
+    </ol>
+</div>
+
+<p style="text-align: center; margin-top: 30px;">
+    <a href="https://pixelsolutions.biz/plugins/logwatch" target="_blank" class="cta xlarge ui-state-highlight" data-icon="my-icon-star">
+        <span class="ui-myicon my-icon-star"></span>
+        <span class="ui-button-text">Get LogWatch Pro</span>
+    </a>
+</p>
 </div>
 {/if}

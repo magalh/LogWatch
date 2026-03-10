@@ -20,7 +20,7 @@ if( isset($params['submit']) ) {
         
         // Handle Pro enable/disable
         $pro_mod = cms_utils::get_module('LogWatchPro');
-        if ($pro_mod !== false) {
+        if (is_object($pro_mod)) {
             $pro_active = isset($params['pro_active']) && $params['pro_active'] == '1';
             $pro_mod->SetPreference('logwatchpro_active', $pro_active ? '1' : '0');
         }
@@ -59,9 +59,8 @@ $has_valid_log_source = !empty($available_logs) && isset($available_logs[$select
 
 // LogWatchPro status
 $pro_mod = cms_utils::get_module('LogWatchPro');
-$pro_installed = ($pro_mod !== false);
+$pro_installed = is_object($pro_mod);
 $pro_enabled = $pro_installed && $pro_mod->IsProEnabled();
-
 // Display header
 $smarty = cmsms()->GetSmarty();
 $header_tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_header.tpl'), null, null, $smarty);
