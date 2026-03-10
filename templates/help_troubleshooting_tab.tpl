@@ -11,6 +11,15 @@
   <li>Try creating an error_log file in your CMS root directory</li>
 </ul>
 
+<p><strong>Alternative Solution - Use LogWatchPro:</strong></p>
+<p>If you're on shared hosting without log file access, <strong>LogWatchPro can still monitor errors in real-time</strong> without needing to read log files. Pro's error handler captures NEW errors as they occur and provides:</p>
+<ul>
+  <li>Instant notifications (Slack/Discord/Email)</li>
+  <li>Error grouping and analytics</li>
+  <li>Notification history tracking</li>
+</ul>
+<p>You won't see historical errors, but you'll be alerted to any NEW issues immediately.</p>
+
 <h4>Errors Not Appearing</h4>
 <p><strong>Problem</strong>: PHP errors are occurring but not showing in LogWatch.</p>
 <p><strong>Solutions</strong>:</p>

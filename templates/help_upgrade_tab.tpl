@@ -1,6 +1,12 @@
 <h3>{$logwatch->Lang('help_upgrade')}</h3>
 
 <h4>Upgrade to LogWatch Pro</h4>
+
+<div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 15px 0;">
+  <strong>Perfect for Shared Hosting!</strong><br>
+  Don't have access to server log files? LogWatchPro works without them! It captures errors in real-time as they occur and sends instant notifications - no log file reading required.
+</div>
+
 <p>Unlock enterprise-grade error monitoring with LogWatch Pro:</p>
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">

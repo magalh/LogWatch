@@ -1,5 +1,10 @@
 <h3>{$logwatch->Lang('help_pro_features')}</h3>
 
+<div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 15px 0;">
+  <strong>Works Without Log File Access!</strong><br>
+  LogWatchPro's real-time error handler works even if you don't have access to server log files. It captures NEW errors as they occur and sends notifications, tracks analytics, and groups errors - no log file reading required.
+</div>
+
 <h4>Real-Time Notifications</h4>
 <p>Get instant alerts when errors occur via:</p>
 <ul>

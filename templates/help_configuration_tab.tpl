@@ -10,6 +10,8 @@
   <li>The path is not blocked by open_basedir restrictions</li>
 </ul>
 
+<p><strong>Note:</strong> If you don't have access to server log files (common on shared hosting), the basic LogWatch module will have limited functionality. However, <strong>LogWatchPro can still track and notify you of NEW errors in real-time</strong> using its error handler, even without log file access. See the Pro Features tab for details.</p>
+
 <p><strong>Error Types</strong></p>
 <p>Choose which error types to display:</p>
 <ul>
