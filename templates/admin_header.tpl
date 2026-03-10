@@ -2,7 +2,7 @@
     <div style="display: flex; align-items: center;">
         <img src="{$mod->GetModuleURLPath()}/assets/icon.svg" alt="LogWatch" style="width: 96px; height: 96px; margin-right: 10px;">
         <div>
-            <h2 style="margin: 0;">LogWatch</h2>
+            <h2 style="margin: 0;">LogWatch{if $pro_enabled} Pro{/if}</h2>
             <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">{$mod->Lang('admindescription')}</p>
         </div>
     </div>

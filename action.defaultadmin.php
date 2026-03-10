@@ -48,9 +48,17 @@ if ($selected_log_source === 'manual' && !empty($manual_log_path)) {
 
 $has_valid_log_source = !empty($available_logs) && isset($available_logs[$selected_log_source]) && $available_logs[$selected_log_source]['exists'];
 
+
+
+// LogWatchPro status
+$pro_mod = cms_utils::get_module('LogWatchPro');
+$pro_installed = ($pro_mod !== false);
+$pro_enabled = $pro_installed && $pro_mod->IsProEnabled();
+
 // Display header
 $smarty = cmsms()->GetSmarty();
 $header_tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_header.tpl'), null, null, $smarty);
+$header_tpl->assign('pro_enabled', $pro_enabled);
 $header_tpl->display();
 
 echo $this->StartTabHeaders();
@@ -62,11 +70,6 @@ echo $this->StartTabHeaders();
 		echo $this->SetTabHeader('filters', $this->Lang('tab_filters'));
 	}
 	echo $this->SetTabHeader('settings', $this->Lang('tab_settings'));
-	
-	// LogWatchPro tabs
-	$pro_mod = cms_utils::get_module('LogWatchPro');
-	$pro_installed = ($pro_mod !== false);
-	$pro_enabled = $pro_installed && $pro_mod->IsProEnabled();
 	
 	if ($pro_installed && $pro_enabled) {
 		echo $this->SetTabHeader('integrations', 'Integrations');
