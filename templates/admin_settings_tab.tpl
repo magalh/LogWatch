@@ -60,6 +60,24 @@
 
 {form_start}
 
+{if $pro_available}
+<div class="pageoverflow" style="background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-left: 4px solid {if $pro_active}#4caf50{else}#ff9800{/if};">
+    <p class="pagetext" style="font-weight: bold;">{$mod->Lang('logwatch_pro_status')}:</p>
+    <p class="pageinput">
+        <label style="display: inline-flex; align-items: center; gap: 10px;">
+            <input type="checkbox" name="{$actionid}pro_active" value="1" {if $pro_active}checked{/if} />
+            <span style="font-size: 14px;">
+                {if $pro_active}
+                    <strong style="color: #4caf50;">✓ {$mod->Lang('pro_enabled')}</strong> - {$mod->Lang('pro_enabled_desc')}
+                {else}
+                    <strong style="color: #ff9800;">✗ {$mod->Lang('pro_disabled')}</strong> - {$mod->Lang('pro_disabled_desc')}
+                {/if}
+            </span>
+        </label>
+    </p>
+</div>
+{/if}
+
 <div class="pageoverflow">
     <p class="pagetext">{$mod->Lang('log_source')}:</p>
     <p class="pageinput">

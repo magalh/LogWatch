@@ -104,6 +104,7 @@ $pro_prefs = [
     'logwatchpro_email_to',
     'logwatchpro_cooldown_minutes',
     'logwatchpro_max_per_hour',
+    'logwatchpro_history_retention_days',
     'logwatchpro_notify_types',
     'logwatchpro_error_grouping_enabled',
     'logwatchpro_performance_metrics_enabled',

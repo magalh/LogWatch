@@ -43,6 +43,7 @@ $lang['get_started'] = "Configure";
 #l
 $lang['line'] = 'Line';
 $lang['log_source'] = 'Log Source';
+$lang['logwatch_pro_status'] = 'LogWatch Pro Status';
 
 #m
 $lang['manual_log_path'] = 'Manual log file path';
@@ -50,6 +51,10 @@ $lang['manual_log_path_desc'] = 'Enter the full server path to your error log fi
 $lang['message'] = 'Message';
 
 #p
+$lang['pro_disabled'] = 'Disabled';
+$lang['pro_disabled_desc'] = 'Premium features are currently disabled';
+$lang['pro_enabled'] = 'Enabled';
+$lang['pro_enabled_desc'] = 'Premium features are active (notifications, analytics, integrations)';
 $lang['prompt_go'] = 'Go';
 $lang['prompt_page'] = 'Page';
 

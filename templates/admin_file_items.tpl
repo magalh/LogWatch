@@ -10,6 +10,44 @@
         white-space: nowrap;
     }
 </style>
+
+<script>
+    function toggleCheckboxes() {
+        var allCheckbox = document.querySelector('input[name="{$actionid}logsettings[]"][value="E_ALL"]');
+        var checkboxes = document.querySelectorAll('input[name="{$actionid}logsettings[]"]:not([value="E_ALL"])');
+
+        if (allCheckbox.checked) {
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            });
+        } else {
+            checkboxes.forEach(function(checkbox) {
+                checkbox.disabled = false;
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var allCheckbox = document.querySelector('input[name="{$actionid}logsettings[]"][value="E_ALL"]');
+        if (allCheckbox) {
+            allCheckbox.addEventListener('change', toggleCheckboxes);
+            toggleCheckboxes();
+        }
+    });
+</script>
+
+{form_start}
+<div style="background: #f9f9f9; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd;">
+    <strong>Filter by Error Type:</strong>
+    {foreach from=$exceptions key=key item=label}
+        <label style="margin-right: 15px; display: inline-block;">
+            <input type="checkbox" name="{$actionid}logsettings[]" value="{$key}" {if in_array($key, $selected_logsettings) || ($key == 'E_ALL' && empty($selected_logsettings))}checked{/if}/> {$label}
+        </label>
+    {/foreach}
+    <input type="submit" name="{$actionid}submit" value="Apply" style="margin-left: 10px;"/>
+</div>
+{form_end}
   
 {if !empty($error) }
 	<div class="warning">{$message}</div>

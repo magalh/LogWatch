@@ -18,6 +18,13 @@ if( isset($params['submit']) ) {
             $this->SetPreference('manual_log_path', $manual_path);
         }
         
+        // Handle Pro enable/disable
+        $pro_mod = cms_utils::get_module('LogWatchPro');
+        if ($pro_mod !== false) {
+            $pro_active = isset($params['pro_active']) && $params['pro_active'] == '1';
+            $pro_mod->SetPreference('logwatchpro_active', $pro_active ? '1' : '0');
+        }
+        
         $this->SetMessage($this->Lang('settings_saved'));
         $this->RedirectToAdminTab();
     }
@@ -67,12 +74,12 @@ echo $this->StartTabHeaders();
 		$hidden_count = $this->getHiddenErrorsCount();
 		$hidden_label = $this->Lang('tab_hidden') . ($hidden_count > 0 ? " ({$hidden_count})" : "");
 		echo $this->SetTabHeader('hidden', $hidden_label);
-		echo $this->SetTabHeader('filters', $this->Lang('tab_filters'));
 	}
 	echo $this->SetTabHeader('settings', $this->Lang('tab_settings'));
 	
 	if ($pro_installed && $pro_enabled) {
 		echo $this->SetTabHeader('integrations', 'Integrations');
+		echo $this->SetTabHeader('analytics', 'Analytics');
 		echo $this->SetTabHeader('notifications', 'Notification History');
 	}
 	
@@ -97,10 +104,6 @@ echo $this->StartTabContent();
 		echo $this->StartTab('hidden');
 		include(__DIR__.'/function.admin_hidden_errors.php');
 		echo $this->EndTab();
-
-		echo $this->StartTab('filters');
-		include(__DIR__.'/function.admin_filters_tab.php');
-		echo $this->EndTab();
 	}
 
 	echo $this->StartTab('settings');
@@ -111,6 +114,10 @@ echo $this->StartTabContent();
 	if ($pro_installed && $pro_enabled) {
 		echo $this->StartTab('integrations', $params);
 		include($pro_mod->GetModulePath() . '/function.admin_integrations.php');
+		echo $this->EndTab();
+		
+		echo $this->StartTab('analytics', $params);
+		include($pro_mod->GetModulePath() . '/function.admin_analytics.php');
 		echo $this->EndTab();
 		
 		echo $this->StartTab('notifications', $params);

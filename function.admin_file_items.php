@@ -11,6 +11,17 @@ $message = '';
 $smarty = cmsms()->GetSmarty();
 $tpl = $smarty->CreateTemplate($this->GetTemplateResource('admin_file_items.tpl'),null,null,$smarty);
 
+// Get filter settings for display
+$logsettings_pref = $this->GetPreference('logsettings', 'E_ALL');
+$selected_logsettings = explode(',', $logsettings_pref);
+$exceptions = [
+    'E_ALL' => 'All Errors',
+    'Fatal error' => 'Fatal Error',
+    'Warning' => 'Warning',
+    'Notice' => 'Notice',
+    'Deprecated' => 'Deprecated'
+];
+
 $pagelimit = 50;
 $pagenumber = 1;
 
@@ -85,6 +96,8 @@ $tpl->assign('pagenumber', $pagenumber);
 $tpl->assign('total_items', $total_items);
 $tpl->assign('total_pages', $total_pages);
 $tpl->assign('selected_log_info', $available_logs[$selected_log_source] ?? null);
+$tpl->assign('exceptions', $exceptions);
+$tpl->assign('selected_logsettings', $selected_logsettings);
 
 $clear_logs = false;
 if( $this->CheckPermission(LogWatch::CLEAR_LOGS) ) {
