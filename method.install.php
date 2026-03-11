@@ -27,3 +27,7 @@ $dict->ExecuteSQLArray($sqlarray);
 $this->CreatePermission(LogWatch::MANAGE_PERM, 'Manage LogWatch');
 $this->CreatePermission(LogWatch::EXPORT_LOGS, 'Export Logs');
 $this->CreatePermission(LogWatch::CLEAR_LOGS, 'Clear Logs');
+
+// Track installation
+include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
+\LogWatch\ModuleTracker::track($this->GetName(), 'install', CMS_VERSION, $this->GetVersion());
