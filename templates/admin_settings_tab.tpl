@@ -74,7 +74,7 @@
 
 {form_start}
 
-{if $pro_enabled}
+{if $pro_available}
 <div class="pageoverflow" style="background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-left: 4px solid {if $pro_active}#4caf50{else}#ff9800{/if};">
     <p class="pagetext" style="font-weight: bold;">{$mod->Lang('logwatch_pro_status')}:</p>
     <p class="pageinput">

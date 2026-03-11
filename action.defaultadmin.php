@@ -76,13 +76,12 @@ echo $this->StartTabHeaders();
 	}
 	echo $this->SetTabHeader('settings', $this->Lang('tab_settings'));
 	
-	if ($pro_installed && $pro_enabled) {
-		echo $this->SetTabHeader('integrations', 'Integrations');
-		echo $this->SetTabHeader('analytics', 'Analytics');
-		echo $this->SetTabHeader('notifications', 'Notification History');
-	}
-	
 	if ($pro_installed) {
+		if ($pro_enabled) {
+			echo $this->SetTabHeader('integrations', 'Integrations');
+			echo $this->SetTabHeader('analytics', 'Analytics');
+			echo $this->SetTabHeader('notifications', 'Notification History');
+		}
 		echo $this->SetTabHeader('license', 'License');
 	} else {
 		echo $this->SetTabHeader('premium', $this->Lang('tab_premium'));
@@ -110,21 +109,21 @@ echo $this->StartTabContent();
 	echo $this->EndTab();
 	
 	// LogWatchPro tabs
-	if ($pro_installed && $pro_enabled) {
-		echo $this->StartTab('integrations', $params);
-		include($pro_mod->GetModulePath() . '/function.admin_integrations.php');
-		echo $this->EndTab();
-		
-		echo $this->StartTab('analytics', $params);
-		include($pro_mod->GetModulePath() . '/function.admin_analytics.php');
-		echo $this->EndTab();
-		
-		echo $this->StartTab('notifications', $params);
-		include($pro_mod->GetModulePath() . '/function.admin_notifications.php');
-		echo $this->EndTab();
-	}
-	
 	if ($pro_installed) {
+		if ($pro_enabled) {
+			echo $this->StartTab('integrations', $params);
+			include($pro_mod->GetModulePath() . '/function.admin_integrations.php');
+			echo $this->EndTab();
+			
+			echo $this->StartTab('analytics', $params);
+			include($pro_mod->GetModulePath() . '/function.admin_analytics.php');
+			echo $this->EndTab();
+			
+			echo $this->StartTab('notifications', $params);
+			include($pro_mod->GetModulePath() . '/function.admin_notifications.php');
+			echo $this->EndTab();
+		}
+		
 		echo $this->StartTab('license', $params);
 		include($pro_mod->GetModulePath() . '/function.admin_license.php');
 		echo $this->EndTab();

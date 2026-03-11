@@ -16,7 +16,7 @@ $flds = "
     notes X
 ";
 
-$taboptarray = ['mysql' => 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'];
+$taboptarray = ['mysql' => 'ENGINE=InnoDB'];
 $sqlarray = $dict->CreateTableSQL(cms_db_prefix() . 'module_logwatch_hidden', $flds, $taboptarray);
 $dict->ExecuteSQLArray($sqlarray);
 
