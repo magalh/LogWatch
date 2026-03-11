@@ -11,7 +11,7 @@ class LogWatch extends CMSModule
 	const EXPORT_LOGS = 'export_logs';
 	
 	public function IsPluginModule() { return true;}
-	public function GetVersion() { return '2.2.0'; }
+	public function GetVersion() { return '2.2.3'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
     public function MinimumCMSVersion() { return '2.2.0'; }
@@ -231,10 +231,7 @@ class LogWatch extends CMSModule
 	
 	public function getErrorHash($log)
 	{
-		$file = $log->file ?? '';
-		$line = $log->line ?? '';
-		$description = trim($log->description ?? '');
-		return md5($file . ':' . $line . ':' . $description);
+		return FileQuery::getErrorHash($log);
 	}
 	
 	public function getHiddenErrorsCount()
@@ -245,6 +242,27 @@ class LogWatch extends CMSModule
 		
 		return $result ? (int)$result->fields['count'] : 0;
 	}
+
+	public function GetHeaderHTML()
+    {
+        $module_path = $this->GetModuleURLPath();
+        $assets_dir = cms_join_path($this->GetModulePath(), 'assets');
+        $header_links = '';
+        
+        if (is_dir($assets_dir)) {
+            $files = scandir($assets_dir);
+            foreach ($files as $file) {
+                $ext = pathinfo($file, PATHINFO_EXTENSION);
+                if ($ext === 'css') {
+                    $header_links .= '<link rel="stylesheet" type="text/css" href="'.$module_path.'/assets/'.$file.'">';
+                } elseif ($ext === 'js') {
+                    $header_links .= '<script language="javascript" src="'.$module_path.'/assets/'.$file.'"></script>';
+                }
+            }
+        }
+        
+        return $header_links;
+    }
 
 	
     public function GetHelp() {

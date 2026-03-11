@@ -29,6 +29,15 @@ if (isset($params['pagenumber']) && $params['pagenumber'] !== '') {
     $pagenumber = (int)$params['pagenumber'];
 }
 
+// Get view mode preference
+$view_mode = 'grouped'; // Default to grouped
+if (isset($params['view_mode'])) {
+    $view_mode = $params['view_mode'];
+    $this->SetPreference('view_mode', $view_mode);
+} else {
+    $view_mode = $this->GetPreference('view_mode', 'grouped');
+}
+
 $offset = ($pagenumber - 1) * $pagelimit;
 
 // Get selected log source
@@ -81,23 +90,48 @@ if ($selected_log_source && isset($available_logs[$selected_log_source])) {
         return !$this->isErrorHidden($log);
     });
     
-    $total_items = is_array($all_logs) ? count($all_logs) : 0;
-    $logs = is_array($all_logs) ? array_slice($all_logs, $offset, $pagelimit) : [];
+    // Handle view mode
+    if ($view_mode === 'grouped') {
+        // Group errors
+        $grouped_logs = FileQuery::groupErrors($all_logs);
+        $total_items = count($grouped_logs);
+        
+        // Paginate groups
+        $grouped_logs = array_slice($grouped_logs, $offset, $pagelimit);
+        $tpl->assign('grouped_logs', $grouped_logs);
+    } else {
+        // List view (original)
+        $total_items = is_array($all_logs) ? count($all_logs) : 0;
+        $logs = is_array($all_logs) ? array_slice($all_logs, $offset, $pagelimit) : [];
+        $tpl->assign('logs', $logs);
+    }
 } else {
     $total_items = 0;
+    if ($view_mode === 'grouped') {
+        $tpl->assign('grouped_logs', []);
+    } else {
+        $tpl->assign('logs', []);
+    }
 }
 
 $total_pages = ceil($total_items / $pagelimit);
 
 $tpl->assign('message',$message);
 $tpl->assign('error',$error);
-$tpl->assign('logs',$logs);
+$tpl->assign('view_mode', $view_mode);
 $tpl->assign('pagenumber', $pagenumber);
 $tpl->assign('total_items', $total_items);
 $tpl->assign('total_pages', $total_pages);
 $tpl->assign('selected_log_info', $available_logs[$selected_log_source] ?? null);
 $tpl->assign('exceptions', $exceptions);
 $tpl->assign('selected_logsettings', $selected_logsettings);
+
+// Check if Pro is enabled
+$pro_mod = cms_utils::get_module('LogWatchPro');
+$pro_installed = is_object($pro_mod);
+$pro_enabled = $pro_installed && $pro_mod->IsProEnabled();
+$tpl->assign('pro_installed', $pro_installed);
+$tpl->assign('pro_enabled', $pro_enabled);
 
 $clear_logs = false;
 if( $this->CheckPermission(LogWatch::CLEAR_LOGS) ) {

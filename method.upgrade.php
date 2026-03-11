@@ -1,39 +1,29 @@
 <?php
-#--------------------------------------------------
-# See doc/LICENSE for full license information.
-#--------------------------------------------------
-if (!defined('CMS_VERSION')) exit;
+if (!isset($gCms)) exit;
 
-$current_version = $oldversion;
 $db = $this->GetDb();
 $dict = NewDataDictionary($db);
 
-// Check if we need to create the hidden errors table (upgrade from older versions)
-if (version_compare($current_version, '2.2.0', '<')) {
-    $taboptarray = array('mysql' => 'ENGINE=InnoDB', 'mysqli' => 'ENGINE=InnoDB');
-    
+$current_version = $oldversion;
+$taboptarray = ['mysql' => 'ENGINE=InnoDB'];
+
+// Upgrade to 2.2.0 - Add hidden errors table (if upgrading from older version)
+if( version_compare($current_version, '2.2.0') < 0 ) {
     $flds = "
-        id I KEY AUTO,
-        error_hash C(64) NOTNULL,
-        file_path C(500),
+        id I AUTO KEY,
+        error_hash C(32) NOTNULL,
+        file_path C(255),
         line_number I,
-        error_message X,
-        hidden_by I,
-        hidden_date T,
+        error_message X NOTNULL,
+        hidden_by I NOTNULL,
+        hidden_date T NOTNULL,
         notes X
     ";
     
     $sqlarray = $dict->CreateTableSQL(cms_db_prefix() . 'module_logwatch_hidden', $flds, $taboptarray);
     $dict->ExecuteSQLArray($sqlarray);
     
-    // Create unique index on error_hash
-    $sqlarray = $dict->CreateIndexSQL(cms_db_prefix() . 'module_logwatch_hidden_idx', cms_db_prefix() . 'module_logwatch_hidden', 'error_hash', array('UNIQUE'));
+    $sqlarray = $dict->CreateIndexSQL('idx_error_hash', cms_db_prefix() . 'module_logwatch_hidden', 'error_hash', ['UNIQUE']);
     $dict->ExecuteSQLArray($sqlarray);
-    
 }
 
-// Track installation
-include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
-\LogWatch\ModuleTracker::track($this->GetName(), 'upgrade', CMS_VERSION, $this->GetVersion());
-
-?>

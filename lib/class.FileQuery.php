@@ -38,5 +38,45 @@ class FileQuery
         // Default to Apache log parser
         return ApacheLogParser::parseLogFile($this->logfilepath);
     }
+    
+    public static function groupErrors($errors)
+    {
+        $grouped = [];
+        
+        foreach ($errors as $error) {
+            $hash = self::getErrorHash($error);
+            
+            if (!isset($grouped[$hash])) {
+                $grouped[$hash] = [
+                    'hash' => $hash,
+                    'sample_error' => $error,
+                    'count' => 0,
+                    'first_seen' => $error->created,
+                    'last_seen' => $error->created,
+                    'instances' => []
+                ];
+            }
+            
+            $grouped[$hash]['count']++;
+            $grouped[$hash]['first_seen'] = min($grouped[$hash]['first_seen'], $error->created);
+            $grouped[$hash]['last_seen'] = max($grouped[$hash]['last_seen'], $error->created);
+            $grouped[$hash]['instances'][] = $error;
+        }
+        
+        // Sort by count (most frequent first)
+        usort($grouped, function($a, $b) {
+            return $b['count'] - $a['count'];
+        });
+        
+        return $grouped;
+    }
+    
+    public static function getErrorHash($log)
+    {
+        $file = $log->file ?? '';
+        $line = $log->line ?? '';
+        $description = trim($log->description ?? '');
+        return md5($file . ':' . $line . ':' . $description);
+    }
 }
 ?>

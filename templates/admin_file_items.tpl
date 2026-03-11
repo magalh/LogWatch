@@ -1,16 +1,3 @@
-<style>
-    .word-wrap {
-        word-wrap: break-word;
-        word-break: break-all;
-        white-space: normal;
-    }
-    .pagetable th:first-child,
-    .pagetable td:first-child {
-        width: 150px;
-        white-space: nowrap;
-    }
-</style>
-
 <script>
     function toggleCheckboxes() {
         var allCheckbox = document.querySelector('input[name="{$actionid}logsettings[]"][value="E_ALL"]');
@@ -39,13 +26,26 @@
 
 {form_start}
 <div style="background: #f9f9f9; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd;">
-    <strong>Filter by Error Type:</strong>
-    {foreach from=$exceptions key=key item=label}
-        <label style="margin-right: 15px; display: inline-block;">
-            <input type="checkbox" name="{$actionid}logsettings[]" value="{$key}" {if in_array($key, $selected_logsettings) || ($key == 'E_ALL' && empty($selected_logsettings))}checked{/if}/> {$label}
+    <div style="margin-bottom: 10px;">
+        <strong>Filter by Error Type:</strong>
+        {foreach from=$exceptions key=key item=label}
+            <label style="margin-right: 15px; display: inline-block;">
+                <input type="checkbox" name="{$actionid}logsettings[]" value="{$key}" {if in_array($key, $selected_logsettings) || ($key == 'E_ALL' && empty($selected_logsettings))}checked{/if}/> {$label}
+            </label>
+        {/foreach}
+        <input type="submit" name="{$actionid}submit" value="Apply" style="margin-left: 10px;"/>
+    </div>
+    <div style="border-top: 1px solid #ddd; padding-top: 10px;">
+        <strong>View Mode:</strong>
+        <label style="margin-left: 15px; cursor: pointer;">
+            <input type="radio" name="{$actionid}view_mode" value="grouped" {if $view_mode == 'grouped'}checked{/if} onchange="this.form.submit()"> 
+            📊 Grouped View
         </label>
-    {/foreach}
-    <input type="submit" name="{$actionid}submit" value="Apply" style="margin-left: 10px;"/>
+        <label style="margin-left: 15px; cursor: pointer;">
+            <input type="radio" name="{$actionid}view_mode" value="list" {if $view_mode == 'list'}checked{/if} onchange="this.form.submit()"> 
+            📋 List View
+        </label>
+    </div>
 </div>
 {form_end}
   
@@ -53,6 +53,11 @@
 	<div class="warning">{$message}</div>
 {/if}
 
+{* Load appropriate view based on view_mode *}
+{if $view_mode == 'grouped'}
+    {include file='module_file_tpl:LogWatch;admin_file_items_grouped.tpl'}
+{else}
+    {* Original list view below *}
 {if !empty($logs)}
   <div class="row c_full">
     <div class="pageoptions grid_6" style="margin-top: 8px;">
@@ -159,7 +164,7 @@
           $('#logStackTraceContent').text(stackTrace);
           $('#logStackTraceDialog').dialog({
             modal: true,
-            width: 600,
+            width: 800,
             buttons: {
               "Close": function() {
                 $(this).dialog("close");
@@ -203,4 +208,6 @@
 {else}
     <div class="warning">Nothing to display yet</div>
 {/if}
+{/if}
+{* End of view mode conditional *}
 {*get_template_vars*}

@@ -112,3 +112,70 @@ ul.logwatch_premium_description_list li::after {
 .logwatch_premium_cta ul li::after {
     color: #CCC;
 }
+
+/* Error List View Styles */
+.word-wrap {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+}
+
+.pagetable th:first-child,
+.pagetable td:first-child {
+    width: 150px;
+    white-space: nowrap;
+}
+
+/* Grouped Error View Styles */
+.error-count-badge {
+    display: inline-block;
+    background: #2196F3;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.error-instances-content {
+    padding: 15px;
+    background: #f9f9f9;
+}
+
+.error-instances-content h4 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+}
+
+.instance-stacktrace {
+    max-height: 150px;
+    overflow-y: auto;
+    background: #f5f5f5;
+    padding: 8px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 11px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+/* AI Explain Button with Sparkles Icon */
+.explain-error:hover {
+    background-color: #e7e7e7;
+    border-color: #999;
+}
+
+/* Override jQuery UI icon sprite for explain button */
+.explain-error.ui-state-default .ui-icon {
+    background-image: url('../assets/icons/sparkles.svg') !important;
+    background-position: center center !important;
+    background-size: 14px 14px !important;
+    width: 16px;
+    height: 16px;
+}
+
+.explain-error.ui-state-hover .ui-icon,
+.explain-error:hover .ui-icon {
+    filter: brightness(0) invert(1);
+}
