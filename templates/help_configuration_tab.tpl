@@ -3,7 +3,13 @@
 <h4>Settings Tab</h4>
 
 <p><strong>Log Source</strong></p>
-<p>Select which log file to monitor from the dropdown. LogWatch automatically detects available logs on your server. If your desired log isn't listed, ensure:</p>
+<p>Select which log file to monitor. LogWatch automatically detects available logs on your server. Options include:</p>
+<ul>
+  <li><strong>Detected server logs</strong>: Virtual host, PHP ini, Apache/Nginx system logs</li>
+  <li><strong>Manual log file path</strong>: Enter a custom path to any readable log file</li>
+  <li><strong>Custom Error Handler</strong>: LogWatch captures PHP errors directly and writes them to a local log file. Ideal for shared hosting where server logs aren't accessible</li>
+</ul>
+<p>If your desired log isn't listed, ensure:</p>
 <ul>
   <li>The file exists and is readable by the web server</li>
   <li>PHP has permission to access the file</li>

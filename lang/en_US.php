@@ -4,6 +4,11 @@ $lang['admin_save'] = "Save";
 $lang['admindescription'] = 'Monitor and analyze PHP errors and server logs in a user-friendly interface';
 $lang['ask_uninstall'] = 'Are you sure you want to uninstall the LogWatch module?';
 
+#c
+$lang['custom_error_handler'] = 'Custom Error Handler';
+$lang['custom_error_handler_desc'] = 'Enable built-in PHP error handler';
+$lang['custom_error_handler_help'] = 'Captures PHP errors directly and writes them to a local log file. Useful when server error logs are not accessible (shared hosting, restricted permissions).';
+
 #d
 $lang['date'] = 'Date';
 $lang['description'] = 'LogWatch helps developers troubleshoot PHP errors by providing a clean, organized view of server error logs. Monitor Fatal errors, Warnings, Notices, and Deprecated functions directly from your CMS admin panel.';

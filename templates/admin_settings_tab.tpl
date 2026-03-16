@@ -113,6 +113,10 @@
                    placeholder="/full/path/to/error.log" style="width: 400px;"/><br/>
             <small style="color: #666;">{$mod->Lang('manual_log_path_desc')}</small>
         </div>
+        <br/>
+        <input type="radio" name="{$actionid}log_source" value="custom_handler" {if $selected_log_source == 'custom_handler'}checked{/if}/> 
+        {$mod->Lang('custom_error_handler')}
+        <br/><small style="margin-left: 20px; color: #666;">{$mod->Lang('custom_error_handler_help')}</small>
     </p>
 </div>
 

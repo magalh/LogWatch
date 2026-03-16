@@ -15,8 +15,17 @@ if( isset($params['submit']) ) {
         // Handle manual log path
         if ($selected_log_source === 'manual' && isset($params['manual_log_path'])) {
             $manual_path = trim($params['manual_log_path']);
+            // Validate path - resolve symlinks and ensure it's a real file
+            $real_path = realpath($manual_path);
+            if ($real_path && is_file($real_path) && is_readable($real_path)) {
+                $manual_path = $real_path;
+            }
             $this->SetPreference('manual_log_path', $manual_path);
         }
+        
+        // Handle custom error handler toggle
+        $enable_handler = ($selected_log_source === 'custom_handler') ? '1' : '0';
+        $this->SetPreference('enable_custom_handler', $enable_handler);
         
         // Handle Pro enable/disable
         $pro_mod = cms_utils::get_module('LogWatchPro');

@@ -11,7 +11,7 @@ class LogWatch extends CMSModule
 	const EXPORT_LOGS = 'export_logs';
 	
 	public function IsPluginModule() { return true;}
-	public function GetVersion() { return '3.0.0'; }
+	public function GetVersion() { return '3.0.1'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
     public function MinimumCMSVersion() { return '2.2.0'; }
@@ -28,10 +28,19 @@ class LogWatch extends CMSModule
 	public function GetAdminSection() { return 'extensions'; }
 	public function GetModuleIcon() { return $this->GetModuleURLPath() . '/assets/icon.svg'; }
 	public function GetDependencies() { return []; }
-	public function InitializeAdmin() {}
+	public function InitializeAdmin() {
+		$this->_initErrorHandler();
+	}
 
 	 public function InitializeFrontend() {
 		$this->RegisterModulePlugin();
+		$this->_initErrorHandler();
+	 }
+
+	 private function _initErrorHandler() {
+		if ($this->GetPreference('enable_custom_handler', '0') === '1') {
+			ErrorHandler::init($this);
+		}
 	 }
 
 	 public function __construct(){
@@ -74,6 +83,17 @@ class LogWatch extends CMSModule
 
 	public static function detectAvailableLogFiles() {
 		$logs = [];
+		
+		// Custom error handler log (highest priority if enabled)
+		$custom_log = ErrorHandler::getLogPath();
+		if ($custom_log && file_exists($custom_log) && is_readable($custom_log) && filesize($custom_log) > 0) {
+			$logs['custom_handler'] = [
+				'name' => 'LogWatch Custom Error Log',
+				'path' => $custom_log,
+				'type' => 'custom',
+				'exists' => true
+			];
+		}
 		
 		// Virtual host error logs (prioritize these)
 		$server_name = $_SERVER['SERVER_NAME'] ?? '';

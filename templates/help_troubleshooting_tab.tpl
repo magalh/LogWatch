@@ -9,6 +9,7 @@
   <li>Ensure the web server has read permissions on the log file</li>
   <li>Check for open_basedir restrictions in PHP configuration</li>
   <li>Try creating an error_log file in your CMS root directory</li>
+  <li><strong>Use the Custom Error Handler</strong>: Select it as your log source in Settings — LogWatch will capture errors directly without needing server log access</li>
 </ul>
 
 <p><strong>Alternative Solution - Use LogWatchPro:</strong></p>

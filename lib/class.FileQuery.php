@@ -17,26 +17,7 @@ class FileQuery
             return [];
         }
 
-        // Detect log format by reading first few lines
-        $handle = fopen($this->logfilepath, 'r');
-        $sampleLines = [];
-        for ($i = 0; $i < 5 && !feof($handle); $i++) {
-            $line = trim(fgets($handle));
-            if (!empty($line)) {
-                $sampleLines[] = $line;
-            }
-        }
-        fclose($handle);
-        
-        // Check if it's PHP error log format
-        foreach ($sampleLines as $line) {
-            if (preg_match('/^\[\d{2}-\w{3}-\d{4}\s+\d{2}:\d{2}:\d{2}\s+[^\]]+\]\s+PHP\s+(Fatal error|Warning|Notice|Parse error|Deprecated):/', $line)) {
-                return PhpLogParser::parseLogFile($this->logfilepath);
-            }
-        }
-        
-        // Default to Apache log parser
-        return ApacheLogParser::parseLogFile($this->logfilepath);
+        return ReverseReader::parseLogFile($this->logfilepath);
     }
     
     public static function groupErrors($errors)
@@ -76,6 +57,12 @@ class FileQuery
         $file = $log->file ?? '';
         $line = $log->line ?? '';
         $description = trim($log->description ?? '');
+        
+        // Normalize dynamic parts so identical errors group together
+        $description = preg_replace('/\[client\s+[^\]]+\]/', '[client]', $description);
+        $description = preg_replace('/\[pid\s+\d+\]/', '[pid]', $description);
+        $description = preg_replace('/:\d{2,5}\]/', ']', $description);
+        
         return md5($file . ':' . $line . ':' . $description);
     }
 }

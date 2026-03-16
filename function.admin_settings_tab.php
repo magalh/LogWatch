@@ -13,6 +13,7 @@ $pro_active = $pro_available && $logwatch_pro->GetPreference('logwatchpro_active
 $available_logs = LogWatch::detectAvailableLogFiles();
 $selected_log_source = $this->GetPreference('log_source', '');
 $manual_log_path = $this->GetPreference('manual_log_path', '');
+$enable_custom_handler = $this->GetPreference('enable_custom_handler', '0');
 
 // Add manual log to available logs if configured
 if ($selected_log_source === 'manual' && !empty($manual_log_path)) {
@@ -37,6 +38,7 @@ $tpl->assign('manual_log_error', $manual_log_error);
 $tpl->assign('pro_available', $pro_available);
 $tpl->assign('pro_enabled', $pro_enabled);
 $tpl->assign('pro_active', $pro_active);
+$tpl->assign('enable_custom_handler', $enable_custom_handler);
 $tpl->display();
 
 ?>
