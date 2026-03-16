@@ -1,5 +1,5 @@
 <ul>
- <li>3.1.0 - March 2025
+ <li>3.0.0 - March 2025
     <p>- Replaced file_get_contents/file() with SplFileObject reverse reader for large log file performance</p>
     <p>- Added Custom Error Handler: captures PHP errors to a local log file when server logs aren't accessible</p>
     <p>- Custom handler available as a log source radio option in Settings</p>
@@ -12,8 +12,6 @@
     <p>- Updated help documentation for new features</p>
     <p>- Removed kassner/log-parser dependency: all parsing handled by custom ServerLogParser</p>
     <p>- Removed composer vendor directory and ApacheLogParser class (dead code)</p>
-  </li>
- <li>3.0.0 - March 2025
     <p>- Added grouped error view: identical errors consolidated with occurrence counts</p>
     <p>- Grouped view shows first seen, last seen, and total occurrences per unique error</p>
     <p>- Error hash system for deduplication and persistent error tracking</p>

@@ -28,6 +28,13 @@ $this->CreatePermission(LogWatch::MANAGE_PERM, 'Manage LogWatch');
 $this->CreatePermission(LogWatch::EXPORT_LOGS, 'Export Logs');
 $this->CreatePermission(LogWatch::CLEAR_LOGS, 'Clear Logs');
 
+// Auto-select first available log source
+$logs = LogWatch::detectAvailableLogFiles();
+if (!empty($logs)) {
+    $first = reset($logs);
+    $this->SetPreference('logwatch_log_source', $first['path']);
+}
+
 // Track installation
 include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
 \LogWatch\ModuleTracker::track($this->GetName(), 'install', CMS_VERSION, $this->GetVersion());
