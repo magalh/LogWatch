@@ -10,6 +10,8 @@
     <p>- Removed shell_exec dependency: SplFileObject used on all platforms</p>
     <p>- Re-entrancy guard in error handler to prevent infinite loops</p>
     <p>- Updated help documentation for new features</p>
+    <p>- Removed kassner/log-parser dependency: all parsing handled by custom ServerLogParser</p>
+    <p>- Removed composer vendor directory and ApacheLogParser class (dead code)</p>
   </li>
  <li>3.0.0 - March 2025
     <p>- Added grouped error view: identical errors consolidated with occurrence counts</p>
@@ -38,7 +40,7 @@
  <li>2.0.2 - January 2025
     <p>- Implemented separate PHP and Apache log parsers for better accuracy</p>
     <p>- Added PhpLogParser class for multiline PHP error logs with stack traces</p>
-    <p>- Added ApacheLogParser class using Kassner LogParser library</p>
+    <p>- Added ApacheLogParser class for Apache error log parsing</p>
     <p>- Improved automatic log format detection in FileQuery</p>
     <p>- Enhanced parsing of PHP error logs with timezone support</p>
     <p>- Fixed multiline stack trace handling for PHP errors</p>
@@ -50,7 +52,7 @@
     <p>- Enhanced admin interface with proper error alerts and validation</p>
   </li>
  <li>2.0.0 - January 2025
-    <p>- Complete rewrite with modern log parsing using kassner/log-parser library</p>
+    <p>- Complete rewrite with modern log parsing engine</p>
     <p>- Added support for multiple log sources (Apache, PHP ini, virtual host, document root)</p>
     <p>- Improved error type detection and filtering (Fatal Error, Warning, Notice, Deprecated)</p>
     <p>- Enhanced user interface with module icon and clean design</p>
@@ -59,7 +61,7 @@
     <p>- Removed individual log deletion (read-only approach for server logs)</p>
     <p>- Added automatic log file detection and configuration</p>
     <p>- Implemented proper HTML escaping for security</p>
-    <p>- Added composer integration for robust log parsing</p>
+
   </li>
  <li>1.4.0 - December 2024
     <p>- Added an option to clear all errors</p>

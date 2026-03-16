@@ -48,9 +48,6 @@
 	</li>
 </ul>
 
-<h3>Credits</h3>
-<p>This module uses the <a href="https://github.com/kassner/log-parser" target="_blank">kassner/log-parser</a> library for robust Apache log parsing. Special thanks to the contributors of this excellent library.</p>
-
 <h3>Copyright and License</h3>
 <p>Copyright &copy; 2024, Magal Hezi <a href="mailto:magal@pixelsolutions.biz">&lt;magal@pixelsolutions.biz&gt;</a>. All Rights Are Reserved.</p>
 <p>This program is free software; you can redistribute it and/or modify

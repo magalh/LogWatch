@@ -20,8 +20,6 @@
 # Made simple that does not indicate clearly and obviously in its admin
 # section that the site was built with CMS Made simple.
 #---------------------------------------------------------------------------------------------------
-use Kassner\LogParser\LogParser;
-
 class ServerLogParser
 {
     public static function parseEntry($logEntry, $rowIndex)

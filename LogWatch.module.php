@@ -44,13 +44,6 @@ class LogWatch extends CMSModule
 	 }
 
 	 public function __construct(){
-		
-		// Load composer dependencies
-		$autoload_file = cms_join_path($this->GetModulePath(), 'vendor', 'autoload.php');
-		if (file_exists($autoload_file)) {
-			require_once $autoload_file;
-		}
-		
 		spl_autoload_register( array($this, '_autoloader') );
 		
 		parent::__construct();
