@@ -33,8 +33,10 @@ class ServerLogParser
             return null;
         }
         
-        // Try new PHP error log format first
-        if (preg_match('/^\[.*?\]\s+PHP\s+(Fatal error|Warning|Notice|Parse error|Deprecated):/', $logEntry)) {
+
+        
+        // Try new PHP error log format first: [DD-Mon-YYYY HH:MM:SS TZ] PHP Level:
+        if (preg_match('/^\[[^\]]+\]\s+PHP\s+(Fatal error|Warning|Notice|Parse error|Deprecated):/', $logEntry)) {
             return self::parsePhpErrorLog($logEntry, $rowIndex);
         }
         
@@ -99,7 +101,7 @@ class ServerLogParser
                 $error['stack'][] = $m[1];
             }
         }        
-        $created = strtotime($error['timestamp']);
+        $created = $error['timestamp'] ? strtotime($error['timestamp']) : false;
         if ($created === false) {
             $created = time();
         }
@@ -108,8 +110,8 @@ class ServerLogParser
         $logitem->row = $rowIndex;
         $logitem->created = $created;
         $logitem->name = 'PHP Error Log';
-        $logitem->type = $error['level'];
-        $logitem->description = $error['message'];
+        $logitem->type = $error['level'] ?: 'Error';
+        $logitem->description = $error['message'] ?: '';
         $logitem->file = $error['file'];
         $logitem->line = $error['line'];
         $logitem->stacktrace = htmlspecialchars($log, ENT_QUOTES);
@@ -183,14 +185,66 @@ class ServerLogParser
         $module_level = $matches[2];
         $message = $matches[3];
         
-        // Extract PHP error type from message if it contains PHP errors
+        // Strip [client ...] prefix (may remain if regex didn't consume it)
+        $message = preg_replace('/^\[client\s+[^\]]+\]\s*/', '', $message);
+        
+        // Strip ", referer: ..." suffix — Apache appends this, not part of the error
+        $message = preg_replace('/, referer:.*$/s', '', $message);
+        
+        // Apache proxy_fcgi wraps multiple PHP messages into one entry
+        // Extract just the first PHP message for clean display
+        if (preg_match('/PHP message: (.+?)(?:; PHP message:|$)/s', $message, $firstMsg)) {
+            $rawMessage = trim($firstMsg[1]);
+        } else {
+            $rawMessage = $message;
+        }
+        $message = $rawMessage;
+        
+        // Detect PHP error level and extract details
         $level = 'Error';
-        if (preg_match('/PHP message: PHP (Fatal error|Warning|Notice|Deprecated|Error):/i', $message, $phpMatch)) {
+        $desc = '';
+        $file = '';
+        $line = 0;
+        
+        // Direct PHP error: "PHP Notice: message in /path on line 123"
+        if (preg_match('/^PHP\s+(Fatal error|Warning|Notice|Deprecated|Parse error|Error):\s*(.+)/is', $message, $phpMatch)) {
             $level = $phpMatch[1];
-        } else if (preg_match('/([^:]+:)?(emerg|alert|crit|error|warn|notice|info|debug)$/i', $module_level, $levelMatch)) {
-            $level = ucfirst(strtolower($levelMatch[2]));
-            if ($level === 'Warn') $level = 'Warning';
-            if ($level === 'Crit') $level = 'Critical';
+            $body = trim($phpMatch[2]);
+            
+            if (preg_match('/^(.+?)\s+in\s+(\S+)\s+on\s+line\s+(\d+)/', $body, $parts)) {
+                $desc = trim($parts[1]);
+                $file = $parts[2];
+                $line = (int)$parts[3];
+            } else {
+                $desc = $body;
+            }
+        }
+        // Wrapped: "Got error 'PHP message: PHP Notice: message in /path on line 123'"
+        else if (preg_match('/PHP message: PHP\s+(Fatal error|Warning|Notice|Deprecated|Error):\s*(.+)/is', $message, $phpMatch)) {
+            $level = $phpMatch[1];
+            $body = trim($phpMatch[2]);
+            
+            if (preg_match('/^(.+?)\s+in\s+(\S+)\s+on\s+line\s+(\d+)/', $body, $parts)) {
+                $desc = trim($parts[1]);
+                $file = $parts[2];
+                $line = (int)$parts[3];
+            } else {
+                $desc = $body;
+            }
+        }
+        // Non-PHP message (bare error_log() output, Apache module messages)
+        else {
+            if (preg_match('/([^:]+:)?(emerg|alert|crit|error|warn|notice|info|debug)$/i', $module_level, $levelMatch)) {
+                $level = ucfirst(strtolower($levelMatch[2]));
+                if ($level === 'Warn') $level = 'Warning';
+                if ($level === 'Crit') $level = 'Critical';
+            }
+            $desc = trim($message);
+        }
+        
+        // Never allow empty description
+        if ($desc === '') {
+            $desc = trim(substr($message, 0, 120));
         }
         
         // Parse Apache timestamp: "Fri Jan 09 10:47:57.993211 2026"
@@ -209,10 +263,10 @@ class ServerLogParser
         $logitem->created = $created;
         $logitem->name = 'Apache Error Log';
         $logitem->type = $level;
-        $logitem->description = self::extractShortDescription($message);
-        $logitem->file = self::extractFile($message);
-        $logitem->line = self::extractLine($message);
-        $logitem->stacktrace = htmlspecialchars($message, ENT_QUOTES);
+        $logitem->description = $desc;
+        $logitem->file = $file;
+        $logitem->line = $line;
+        $logitem->stacktrace = htmlspecialchars($rawMessage, ENT_QUOTES);
         
         return $logitem;
     }

@@ -59,6 +59,7 @@ class FileQuery
         $description = trim($log->description ?? '');
         
         // Normalize dynamic parts so identical errors group together
+        $description = preg_replace('/, referer:.*$/s', '', $description);
         $description = preg_replace('/\[client\s+[^\]]+\]/', '[client]', $description);
         $description = preg_replace('/\[pid\s+\d+\]/', '[pid]', $description);
         $description = preg_replace('/:\d{2,5}\]/', ']', $description);
