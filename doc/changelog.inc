@@ -1,5 +1,5 @@
 <ul>
- <li>3.0.0 - March 2025
+ <li>3.1.0 - March 2025
     <p>- Replaced file_get_contents/file() with SplFileObject reverse reader for large log file performance</p>
     <p>- Added Custom Error Handler: captures PHP errors to a local log file when server logs aren't accessible</p>
     <p>- Custom handler available as a log source radio option in Settings</p>
@@ -9,6 +9,12 @@
     <p>- Added realpath() validation for manual log path to prevent path traversal</p>
     <p>- Removed shell_exec dependency: SplFileObject used on all platforms</p>
     <p>- Re-entrancy guard in error handler to prevent infinite loops</p>
+    <p>- Updated help documentation for new features</p>
+  </li>
+ <li>3.0.0 - March 2025
+    <p>- Added grouped error view: identical errors consolidated with occurrence counts</p>
+    <p>- Grouped view shows first seen, last seen, and total occurrences per unique error</p>
+    <p>- Error hash system for deduplication and persistent error tracking</p>
   </li>
  <li>2.2.0 - January 2025
     <p>- Fixed module class to use modern cmsms()->GetSmarty() API</p>
