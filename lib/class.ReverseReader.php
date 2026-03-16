@@ -77,7 +77,12 @@ class ReverseReader
      */
     private static function getApacheEntriesReverse($file)
     {
-        return self::getApacheEntriesReverseSpl($file);
+        $lines = self::tailLines($file);
+        if ($lines === null) {
+            $lines = file($file, FILE_IGNORE_NEW_LINES);
+            if ($lines === false) return [];
+        }
+        return self::parseLinesReverseApache($lines);
     }
 
     /**
@@ -85,7 +90,26 @@ class ReverseReader
      */
     private static function getPhpEntriesReverse($file)
     {
-        return self::getPhpEntriesReverseSpl($file);
+        $lines = self::tailLines($file);
+        if ($lines === null) {
+            $lines = file($file, FILE_IGNORE_NEW_LINES);
+            if ($lines === false) return [];
+        }
+        return self::parseLinesReversePhp($lines);
+    }
+
+    /**
+     * Use tail to read file lines efficiently. Returns null if unavailable.
+     */
+    private static function tailLines($file)
+    {
+        if (PHP_OS_FAMILY === 'Windows' || !function_exists('shell_exec')) {
+            return null;
+        }
+        $escaped = escapeshellarg($file);
+        $output = @shell_exec("tail -n 50000 $escaped 2>/dev/null");
+        if ($output === null) return null;
+        return explode("\n", rtrim($output, "\n"));
     }
 
     /**
@@ -152,78 +176,6 @@ class ReverseReader
         return $entries;
     }
 
-    /**
-     * Get Apache log entries using SplFileObject (fallback for Windows / no shell_exec)
-     */
-    private static function getApacheEntriesReverseSpl($file)
-    {
-        $fp = new SplFileObject($file, 'r');
-        $fp->seek(PHP_INT_MAX);
-        $lastLine = $fp->key();
 
-        $entries = [];
-        $current = '';
-
-        for ($i = $lastLine; $i >= 0; $i--) {
-            $fp->seek($i);
-            $line = rtrim($fp->current());
-
-            if ($line === '') {
-                continue;
-            }
-
-            if (preg_match('/^\[[A-Z][a-z]{2}\s[A-Z][a-z]{2}\s+\d{1,2}\s/', $line)) {
-                if ($current !== '') {
-                    $entries[] = trim($current);
-                }
-                $current = $line . "\n";
-            } else {
-                $current = $line . "\n" . $current;
-            }
-        }
-
-        if ($current !== '') {
-            $entries[] = trim($current);
-        }
-
-        return $entries;
-    }
-
-    /**
-     * Get PHP log entries using SplFileObject (fallback for Windows / no shell_exec)
-     */
-    private static function getPhpEntriesReverseSpl($file)
-    {
-        $fp = new SplFileObject($file, 'r');
-        $fp->seek(PHP_INT_MAX);
-        $lastLine = $fp->key();
-
-        $entries = [];
-        $current = '';
-
-        for ($i = $lastLine; $i >= 0; $i--) {
-            $fp->seek($i);
-            $line = rtrim($fp->current());
-
-            if ($line === '') {
-                continue;
-            }
-
-            if (preg_match('/^\[\d{2}-\w{3}-\d{4}\s+\d{2}:\d{2}:\d{2}\s+[^\]]+\]\s+PHP\s+/', $line)) {
-                if ($current !== '') {
-                    $entries[] = trim($current);
-                }
-                $current = $line . "\n";
-            } else {
-                $current = $line . "\n" . $current;
-            }
-        }
-
-        if ($current !== '') {
-            $entries[] = trim($current);
-        }
-
-        return $entries;
-    }
 }
 ?>
