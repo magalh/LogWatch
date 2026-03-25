@@ -41,7 +41,7 @@ a.cta.xlarge .ui-myicon.my-icon-star{top:14px;left:14px;font-size:28px}
                 </h2>
                 <ul class="description_list">
                     <li><a href="https://pixelsolutions.biz/plugins/logwatch" target="_blank">View full Pro feature list</a></li>
-                    <li><a href="https://pixelsolutions.biz/support" target="_blank">Professional support options</a></li>
+                    <li><a href="https://pixelsolutions.biz/contact" target="_blank">Professional support options</a></li>
                     <li><a href="https://pixelsolutions.biz/documentation/logwatch" target="_blank">Technical documentation</a></li>
                 </ul>
             </div>
