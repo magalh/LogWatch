@@ -1,6 +1,7 @@
 moduleinfo.ini
 .aws
 .amazonq
+.vscode
 releases/
 build.sh
 export_xml.php

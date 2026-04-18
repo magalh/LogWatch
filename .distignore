@@ -1,0 +1,7 @@
+.git
+.gitignore
+.amazonq
+.vscode
+.distignore
+releases
+lambda

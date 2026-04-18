@@ -1,4 +1,7 @@
 <?php
+#--------------------------------------------------
+# See LICENSE for full license information.
+#--------------------------------------------------
 if (!isset($gCms)) exit;
 
 $db = $this->GetDb();
@@ -27,8 +30,11 @@ if( version_compare($current_version, '2.1.0') < 0 ) {
     $dict->ExecuteSQLArray($sqlarray);
 }
 
-// Track installation
-include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
-\LogWatch\ModuleTracker::track($this->GetName(), 'upgrade', CMS_VERSION, $this->GetVersion());
-
+// Upgrade to 3.0.1 - Remove deprecated ModuleTracker class file
+if (version_compare($current_version, '3.0.1') < 0) {
+    $tracker_file = cms_join_path($this->GetModulePath(), 'lib', 'class.ModuleTracker.php');
+    if (is_file($tracker_file)) {
+        @unlink($tracker_file);
+    }
+}
 

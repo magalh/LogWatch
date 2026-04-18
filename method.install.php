@@ -1,4 +1,7 @@
 <?php
+#--------------------------------------------------
+# See LICENSE for full license information.
+#--------------------------------------------------
 if (!isset($gCms)) exit;
 
 $db = $this->GetDb();
@@ -35,6 +38,3 @@ if (!empty($logs)) {
     $this->SetPreference('logwatch_log_source', $first['path']);
 }
 
-// Track installation
-include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
-\LogWatch\ModuleTracker::track($this->GetName(), 'install', CMS_VERSION, $this->GetVersion());

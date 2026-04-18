@@ -10,8 +10,9 @@ class LogWatch extends CMSModule
 	const CLEAR_LOGS = 'clear_logs';
 	const EXPORT_LOGS = 'export_logs';
 	
+	public function GetName() { return 'LogWatch'; }
 	public function IsPluginModule() { return true;}
-	public function GetVersion() { return '3.0.0'; }
+	public function GetVersion() { return '3.0.1'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
     public function MinimumCMSVersion() { return '2.2.0'; }
@@ -26,7 +27,7 @@ class LogWatch extends CMSModule
     public function GetAuthorEmail() { return 'info@pixelsolutions.biz'; }
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
 	public function GetAdminSection() { return 'extensions'; }
-	public function GetModuleIcon() { return $this->GetModuleURLPath() . '/assets/icon.svg'; }
+	public function GetModuleIcon() { return $this->GetModuleURLPath() . '/assets/icon.png'; }
 	public function GetDependencies() { return []; }
 	public function InitializeAdmin() {
 		$this->_initErrorHandler();
@@ -39,7 +40,7 @@ class LogWatch extends CMSModule
 
 	 private function _initErrorHandler() {
 		if ($this->GetPreference('enable_custom_handler', '0') === '1') {
-			ErrorHandler::init($this);
+			LogWatch_ErrorHandler::init($this);
 		}
 	 }
 
@@ -78,7 +79,7 @@ class LogWatch extends CMSModule
 		$logs = [];
 		
 		// Custom error handler log (highest priority if enabled)
-		$custom_log = ErrorHandler::getLogPath();
+		$custom_log = LogWatch_ErrorHandler::getLogPath();
 		if ($custom_log && file_exists($custom_log) && is_readable($custom_log) && filesize($custom_log) > 0) {
 			$logs['custom_handler'] = [
 				'name' => 'LogWatch Custom Error Log',
@@ -236,15 +237,15 @@ class LogWatch extends CMSModule
 		$error_hash = md5($file . ':' . $line . ':' . $description);
 		
 		$db = $this->GetDb();
-		$sql = "SELECT id FROM " . cms_db_prefix() . "module_logwatch_hidden WHERE error_hash = ?";
-		$result = $db->Execute($sql, [$error_hash]);
+		$sql = "SELECT 1 FROM " . cms_db_prefix() . "module_logwatch_hidden WHERE error_hash = ?";
+		$result = $db->GetOne($sql, [$error_hash]);
 		
-		return $result && !$result->EOF;
+		return !empty($result);
 	}
 	
 	public function getErrorHash($log)
 	{
-		return FileQuery::getErrorHash($log);
+		return LogWatch_FileQuery::getErrorHash($log);
 	}
 	
 	public function getHiddenErrorsCount()
@@ -254,6 +255,20 @@ class LogWatch extends CMSModule
 		$result = $db->Execute($sql);
 		
 		return $result ? (int)$result->fields['count'] : 0;
+	}
+
+	public function getHiddenHashes()
+	{
+		$db = $this->GetDb();
+		$sql = "SELECT error_hash FROM " . cms_db_prefix() . "module_logwatch_hidden";
+		$result = $db->Execute($sql);
+		$hashes = [];
+		if ($result) {
+			while ($row = $result->FetchRow()) {
+				$hashes[$row['error_hash']] = true;
+			}
+		}
+		return $hashes;
 	}
 
 	public function GetHeaderHTML()

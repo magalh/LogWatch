@@ -21,7 +21,7 @@
 </ol>
 
 <h3>Screenshots</h3>
-<p><img src="https://cmsms-downloads.s3.eu-south-1.amazonaws.com/LogWatch/thumbnail.jpg" alt="LogWatch module" width="900"></p>
+<p><img src="https://cdn.pixelsolutions.biz/plugins/cmsms/LogWatch/screenshot-1.jpg" alt="LogWatch module" width="900"></p>
 
 <h4>Configuration</h4>
 <ol>
@@ -42,14 +42,10 @@
 <ul>
   <li>For the latest version of this module or to file a Feature Request or Bug Report, please visit the <a href="https://github.com/magalh/LogWatch" target="_blank">LogWatch GitHub Page</a>.</li>
     <li>If you didn't find an answer to your question, you are warmly invited to open a new issue on the <a href="https://github.com/magalh/LogWatch/issues" target="_blank">LogWatch GitHub Issues Page</a>.</li>
-
-<li>Lastly, if you enjoy this module, use it on a commercial website or would like to encourage future development, you might consider just a small donation. Any kind of feedback will be much appreciated.<br>
-<a href="https://www.paypal.com/donate/?hosted_button_id=FWHABZUN3NC4N" target="_blank"><img src="https://raw.githubusercontent.com/aha999/DonateButtons/master/paypal-donate-icon-7.png" width="120" ></a><br>
-	</li>
 </ul>
 
 <h3>Copyright and License</h3>
-<p>Copyright &copy; 2024, Magal Hezi <a href="mailto:magal@pixelsolutions.biz">&lt;magal@pixelsolutions.biz&gt;</a>. All Rights Are Reserved.</p>
+<p>Copyright &copy; 2026, Magal Hezi <a href="mailto:magal@pixelsolutions.biz">&lt;magal@pixelsolutions.biz&gt;</a>. All Rights Are Reserved.</p>
 <p>This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or

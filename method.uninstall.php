@@ -19,7 +19,4 @@ $dict->ExecuteSQLArray($sqlarray);
 $sqlarray = $dict->DropTableSQL(cms_db_prefix() . 'module_logwatch');
 $dict->ExecuteSQLArray($sqlarray);
 
-// Track installation
-include_once(dirname(__FILE__) . '/lib/class.ModuleTracker.php');
-\LogWatch\ModuleTracker::track($this->GetName(), 'uninstall', CMS_VERSION, $this->GetVersion());
 ?>

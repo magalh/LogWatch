@@ -43,7 +43,7 @@ try {
     ));
 
     // Parse log file using ServerLogParser
-    $logQuery = new FileQuery($log_file_path);
+    $logQuery = new LogWatch_FileQuery($log_file_path);
     $logs = $logQuery->parseLogFile();
     
     foreach ($logs as $log) {
@@ -61,6 +61,7 @@ try {
     exit();
 
 } catch (Exception $e) {
+    error_log('LogWatch export error: ' . $e->getMessage());
     $this->SetError('Error exporting logs: ' . $e->getMessage());
     $this->RedirectToAdminTab();
 }

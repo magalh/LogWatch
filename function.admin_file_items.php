@@ -74,7 +74,7 @@ $show_all = in_array('E_ALL', $selected_filters);
 $logs = [];
 if ($selected_log_source && isset($available_logs[$selected_log_source])) {
     $log_file_path = $available_logs[$selected_log_source]['path'];
-    $logQuery = new FileQuery($log_file_path);
+    $logQuery = new LogWatch_FileQuery($log_file_path);
     $all_logs = $logQuery->parseLogFile();
     
     // Apply error type filter
@@ -85,15 +85,17 @@ if ($selected_log_source && isset($available_logs[$selected_log_source])) {
         });
     }
     
-    // Filter out hidden errors
-    $all_logs = array_filter($all_logs, function($log) {
-        return !$this->isErrorHidden($log);
+    // Filter out hidden errors (batch query instead of per-item)
+    $hidden_hashes = $this->getHiddenHashes();
+    $all_logs = array_filter($all_logs, function($log) use ($hidden_hashes) {
+        $hash = LogWatch_FileQuery::getErrorHash($log);
+        return !isset($hidden_hashes[$hash]);
     });
     
     // Handle view mode
     if ($view_mode === 'grouped') {
         // Group errors
-        $grouped_logs = FileQuery::groupErrors($all_logs);
+        $grouped_logs = LogWatch_FileQuery::groupErrors($all_logs);
         $total_items = count($grouped_logs);
         
         // Paginate groups

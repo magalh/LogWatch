@@ -1,4 +1,7 @@
 <?php
+#--------------------------------------------------
+# See LICENSE for full license information.
+#--------------------------------------------------
  
     function smarty_modifier_noroot($value) {
 

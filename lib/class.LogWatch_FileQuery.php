@@ -2,7 +2,7 @@
 #--------------------------------------------------
 # See doc/LICENSE for full license information.
 #--------------------------------------------------
-class FileQuery
+class LogWatch_FileQuery
 {
     private $logfilepath;
 
@@ -17,7 +17,7 @@ class FileQuery
             return [];
         }
 
-        return ReverseReader::parseLogFile($this->logfilepath);
+        return LogWatch_ReverseReader::parseLogFile($this->logfilepath);
     }
     
     public static function groupErrors($errors)

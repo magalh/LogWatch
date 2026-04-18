@@ -1,4 +1,12 @@
 <ul>
+ <li>3.0.1 - April 2025
+    <p>- Removed ModuleTracker class and all external tracking calls</p>
+    <p>- Removed @ error suppression operator from LogWatch_ErrorHandler file writes</p>
+    <p>- Added re-entrancy guard to handleFatalError() shutdown function</p>
+    <p>- Removed Third-Party Services section from README (no longer applicable)</p>
+    <p>- Fixed PHP 8.4 compatibility: removed deprecated E_STRICT constant from error handler</p>
+    <p>- Fixed undefined variable 'pro_available' in premium tab template</p>
+  </li>
  <li>3.0.0 - March 2025
     <p>- Replaced file_get_contents/file() with SplFileObject reverse reader for large log file performance</p>
     <p>- Added Custom Error Handler: captures PHP errors to a local log file when server logs aren't accessible</p>

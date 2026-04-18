@@ -1,4 +1,7 @@
 <?php
+#--------------------------------------------------
+# See LICENSE for full license information.
+#--------------------------------------------------
 /**
  * Smarty modifier to convert markdown to HTML
  * 

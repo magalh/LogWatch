@@ -1,16 +1,8 @@
 <?php
-#---------------------------------------------------------------------------------------------------
-# Module: LogWatch
-# Authors: Magal Hezi, with CMS Made Simple Foundation.
-# Copyright: (C) 2025 Pixel Solutions, info@pixelsolutions.biz
-# License: GNU General Public License version 2
-#---------------------------------------------------------------------------------------------------
-
-/**
- * Reverse Reader - Reads and parses log files from end of file (newest first)
- * Optimized for large log files using fseek/tail instead of loading entire file
- */
-class ReverseReader
+#--------------------------------------------------
+# See doc/LICENSE for full license information.
+#--------------------------------------------------
+class LogWatch_ReverseReader
 {
     /**
      * Parse log file using reverse reading
@@ -58,7 +50,7 @@ class ReverseReader
         // Parse entries using existing parsers
         $logs = [];
         foreach ($entries as $i => $entry) {
-            $parsed = ServerLogParser::parseEntry($entry, $i);
+            $parsed = LogWatch_ServerLogParser::parseEntry($entry, $i);
             if ($parsed !== null) {
                 $logs[] = $parsed;
             }

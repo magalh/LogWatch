@@ -1,17 +1,8 @@
 <?php
-#---------------------------------------------------------------------------------------------------
-# Module: LogWatch
-# Authors: Magal Hezi, with CMS Made Simple Foundation.
-# Copyright: (C) 2025 Pixel Solutions, info@pixelsolutions.biz
-# License: GNU General Public License version 2
-#---------------------------------------------------------------------------------------------------
-
-/**
- * Custom Error Handler - Creates a local log file when system logs aren't accessible.
- * Registers set_error_handler() and register_shutdown_function() to capture all PHP errors
- * and write them in standard PHP error log format for the existing parsers to read.
- */
-class ErrorHandler
+#--------------------------------------------------
+# See doc/LICENSE for full license information.
+#--------------------------------------------------
+class LogWatch_ErrorHandler
 {
     private static $log_file = null;
     private static $handler_registered = false;
@@ -65,20 +56,20 @@ class ErrorHandler
             @mkdir($log_dir, 0755, true);
 
             $htaccess = cms_join_path($log_dir, '.htaccess');
-            if (!file_exists($htaccess)) {
-                @file_put_contents($htaccess, "Deny from all\n");
+            if (!file_exists($htaccess) && is_writable($log_dir)) {
+                file_put_contents($htaccess, "Deny from all\n");
             }
 
             $index = cms_join_path($log_dir, 'index.html');
-            if (!file_exists($index)) {
-                @file_put_contents($index, '');
+            if (!file_exists($index) && is_writable($log_dir)) {
+                file_put_contents($index, '');
             }
         }
 
         $log_file = cms_join_path($log_dir, 'php-errors.log');
 
-        if (!file_exists($log_file)) {
-            @file_put_contents($log_file, '');
+        if (!file_exists($log_file) && is_writable($log_dir)) {
+            file_put_contents($log_file, '');
         }
 
         if (is_writable($log_file)) {
@@ -117,8 +108,8 @@ class ErrorHandler
             $errline
         );
 
-        if (self::$log_file) {
-            @file_put_contents(self::$log_file, $entry, FILE_APPEND | LOCK_EX);
+        if (self::$log_file && is_writable(self::$log_file)) {
+            file_put_contents(self::$log_file, $entry, FILE_APPEND | LOCK_EX);
         }
 
         self::$handling = false;
@@ -132,6 +123,10 @@ class ErrorHandler
      */
     public static function handleFatalError()
     {
+        if (self::$handling) {
+            return;
+        }
+
         $error = error_get_last();
 
         if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
@@ -147,9 +142,13 @@ class ErrorHandler
                 $error['line']
             );
 
-            if (self::$log_file) {
-                @file_put_contents(self::$log_file, $entry, FILE_APPEND | LOCK_EX);
+            self::$handling = true;
+
+            if (self::$log_file && is_writable(self::$log_file)) {
+                file_put_contents(self::$log_file, $entry, FILE_APPEND | LOCK_EX);
             }
+
+            self::$handling = false;
         }
     }
 
@@ -170,7 +169,6 @@ class ErrorHandler
             E_USER_ERROR        => 'Fatal error',
             E_USER_WARNING      => 'Warning',
             E_USER_NOTICE       => 'Notice',
-            E_STRICT            => 'Notice',
             E_RECOVERABLE_ERROR => 'Fatal error',
             E_DEPRECATED        => 'Deprecated',
             E_USER_DEPRECATED   => 'Deprecated',

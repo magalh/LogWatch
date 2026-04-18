@@ -1,5 +1,8 @@
 <?php
-class PhpLogParser
+#--------------------------------------------------
+# See LICENSE for full license information.
+#--------------------------------------------------
+class LogWatch_PhpLogParser
 {
     public static function parseLogFile($logfilepath)
     {

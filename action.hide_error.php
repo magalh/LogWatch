@@ -1,4 +1,7 @@
 <?php
+#--------------------------------------------------
+# See LICENSE for full license information.
+#--------------------------------------------------
 if (!defined('CMS_VERSION')) exit;
 if (!$this->CheckPermission('manage_LogWatch')) return;
 

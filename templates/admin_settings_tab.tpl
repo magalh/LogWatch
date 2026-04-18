@@ -68,7 +68,7 @@
         <li>Notification history tracking</li>
         <li>Works even without server log file access</li>
     </ul>
-    <p style="margin-bottom: 0;"><a href="https://pixelsolutions.biz/plugins/logwatch-pro" target="_blank" style="font-weight: bold;">Learn More →</a></p>
+    <p style="margin-bottom: 0;"><a href="https://pixelsolutions.biz/plugins/cmsms/logwatch/" target="_blank" style="font-weight: bold;">Learn More →</a></p>
 </div>
 {/if}
 
