@@ -1,0 +1,116 @@
+name: Release CMSMS module (CMSMS install fallback)
+
+# Manual fallback for modules that scripts/build_xml_standalone.php cannot read (exit code 3), for example
+# when GetHelp() renders a Smarty template or a metadata method needs a class from the module constructor.
+# Use release.yml (standalone, no CMSMS, no database) for everything else.
+#
+# This job installs a throwaway CMSMS core (MariaDB service container + headless installer), installs the
+# module into it and runs the builder's verbatim build_xml.php (scripts/build-release-cmsms.sh).
+# It attaches the same xml, zip and tar.gz to a GitHub Release, like release.yml.
+#
+# Run it from the Actions tab (workflow_dispatch) with the tag, for example v1.2.3. The tag must exist and
+# point at a commit that is on main.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to build, for example v1.2.3'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Throwaway database for the throwaway CMSMS site that build_xml.php needs (see build-release-cmsms.sh).
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: ci_password
+          MARIADB_DATABASE: cmsms_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      TAG: ${{ inputs.tag }}
+    steps:
+      - name: Validate tag input
+        run: |
+          if [[ ! "$TAG" =~ ^v[0-9] ]]; then
+            echo "::error::Input tag '$TAG' must look like v1.2.3"
+            exit 1
+          fi
+
+      - name: Checkout the tag (full history, for the main-branch check)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Verify tagged commit is on main
+        run: |
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$(git rev-parse HEAD)" origin/main; then
+            echo "::error::Tag $TAG ($(git rev-parse HEAD)) is not on main. Merge to main first, then tag."
+            exit 1
+          fi
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, json, mysqli, curl, zip, gd, xml, intl
+          ini-values: memory_limit=512M
+          tools: composer
+          coverage: none
+
+      - name: Build packages (xml via throwaway CMSMS, zip, tar.gz)
+        id: build
+        env:
+          # throwaway CMSMS install: core downloaded from GitHub releases (CMSMS_VERSION in install-cmsms-ci.sh)
+          CI_DB_HOST: 127.0.0.1
+          CI_DB_PORT: 3306
+          CI_DB_NAME: cmsms_ci
+          CI_DB_USER: root
+          CI_DB_PASS: ci_password
+        run: |
+          chmod +x .github/scripts/build-release-cmsms.sh
+          .github/scripts/build-release-cmsms.sh -o "$RUNNER_TEMP/dist" -e "${TAG#v}"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.module }}-${{ steps.build.outputs.version }}
+          path: ${{ steps.build.outputs.dir }}/*
+          if-no-files-found: error
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODULE: ${{ steps.build.outputs.module }}
+          VERSION: ${{ steps.build.outputs.version }}
+          DIST: ${{ steps.build.outputs.dir }}
+        run: |
+          files=("$DIST/$MODULE-$VERSION.xml" "$DIST/$MODULE-$VERSION.zip" "$DIST/$MODULE-$VERSION.tar.gz")
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "${files[@]}" --clobber
+          else
+            prerelease=""
+            case "$VERSION" in *-*) prerelease="--prerelease" ;; esac
+            gh release create "$TAG" "${files[@]}" \
+              --title "$MODULE v$VERSION" \
+              --generate-notes $prerelease
+          fi
