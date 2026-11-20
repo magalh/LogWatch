@@ -1,0 +1,82 @@
+name: Release CMSMS module
+
+# Builds the module XML package, .zip and .tar.gz when a release tag (v*) is pushed,
+# using the same exclusions as modules/build/build.sh, and attaches them to a GitHub Release.
+# Tag must point at a commit that is on main, and must match GetVersion() in <Module>.module.php
+# (tag v1.2.3 <-> GetVersion() returns 1.2.3).
+#
+# The XML comes from scripts/build_xml_standalone.php, which reads the module classes directly.
+# No CMSMS core is downloaded and no database is needed.
+# Modules it cannot read (exit code 3) fail the release.
+#
+# Not triggered manually on purpose: a release always comes from a tag on main.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history, for the main-branch check)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Verify tagged commit is on main
+        run: |
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::Tag ${GITHUB_REF_NAME} (${GITHUB_SHA}) is not on main. Merge to main first, then tag."
+            exit 1
+          fi
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, json, curl, zip, gd, xml, intl
+          ini-values: memory_limit=512M
+          tools: composer
+          coverage: none
+
+      - name: Build packages (xml, zip, tar.gz)
+        id: build
+        run: |
+          chmod +x .github/scripts/build-release.sh
+          .github/scripts/build-release.sh -o "$RUNNER_TEMP/dist" -e "${GITHUB_REF_NAME#v}"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.module }}-${{ steps.build.outputs.version }}
+          path: ${{ steps.build.outputs.dir }}/*
+          if-no-files-found: error
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODULE: ${{ steps.build.outputs.module }}
+          VERSION: ${{ steps.build.outputs.version }}
+          DIST: ${{ steps.build.outputs.dir }}
+        run: |
+          files=("$DIST/$MODULE-$VERSION.xml" "$DIST/$MODULE-$VERSION.zip" "$DIST/$MODULE-$VERSION.tar.gz")
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber
+          else
+            prerelease=""
+            case "$VERSION" in *-*) prerelease="--prerelease" ;; esac
+            gh release create "$GITHUB_REF_NAME" "${files[@]}" \
+              --title "$MODULE v$VERSION" \
+              --generate-notes $prerelease
+          fi
