@@ -12,7 +12,7 @@ class LogWatch extends CMSModule
 	
 	public function GetName() { return 'LogWatch'; }
 	public function IsPluginModule() { return true;}
-	public function GetVersion() { return '3.0.1'; }
+	public function GetVersion() { return '3.0.2'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
     public function MinimumCMSVersion() { return '2.2.0'; }
