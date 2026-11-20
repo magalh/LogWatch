@@ -19,7 +19,7 @@
  *   0  XML written
  *   1  error (bad input, missing module file, unexpected exception)
  *   3  the module needs the CMSMS runtime for metadata (for example MinimumCMSVersion() or a missing core language key).
- *      The XML cannot be produced standalone. Use the CMSMS install fallback (build-release-cmsms.sh).
+ *      The XML cannot be produced standalone.
  *   4  README.md is missing; the README is required for standalone module help.
  */
 
@@ -683,12 +683,11 @@ try {
     exit(4);
 } catch (XmlStandaloneUnsupported $e) {
     fwrite(STDERR, 'Standalone packager cannot build this module: ' . $e->getMessage() . "\n");
-    fwrite(STDERR, "Use the CMSMS install fallback (build-release-cmsms.sh).\n");
     exit(3);
 } catch (Error $e) {
     // Undefined CMSMS API (for example ProcessTemplate, ModuleOperations or CmsApp) called from a metadata method.
     fwrite(STDERR, 'Standalone packager stopped on ' . get_class($e) . ': ' . $e->getMessage() . "\n");
-    fwrite(STDERR, "The module probably needs the CMSMS runtime. Use the CMSMS install fallback (build-release-cmsms.sh).\n");
+    fwrite(STDERR, "The module probably needs the CMSMS runtime. This repo has no CMSMS fallback.\n");
     exit(3);
 } catch (Throwable $e) {
     fwrite(STDERR, 'Error: ' . get_class($e) . ': ' . $e->getMessage() . "\n");

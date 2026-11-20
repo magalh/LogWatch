@@ -10,7 +10,7 @@
 # modules/build/build_xml.php.
 #
 # Modules the standalone packager cannot read (it exits with code 3, for example when a metadata method needs
-# CMSMS runtime services) must use the fallback build-release-cmsms.sh. A missing README exits with code 4.
+# CMSMS runtime services) fail the release. A missing README exits with code 4.
 #
 # Run from the module repo root (the directory that contains <Module>.module.php):
 #   .github/scripts/build-release.sh [-m ModuleName] [-o output_dir] [-e expected_version]
@@ -62,13 +62,13 @@ STAGE="$WORK/stage/$MODULE_NAME"
 mkdir -p "$STAGE"
 tar -cf - --exclude=./.git --exclude=./.github . | tar -xf - -C "$STAGE"
 
-# --- XML via the standalone packager (no CMSMS). Exit 3 means the module needs the CMSMS fallback. ---
+# --- XML via the standalone packager (no CMSMS). Exit 3 means the module needs a CMSMS runtime. ---
 XML_DIR="$WORK/xml"
 mkdir -p "$XML_DIR"
 rc=0
 php "${SCRIPT_DIR}/build_xml_standalone.php" "$MODULE_NAME" "$STAGE" "$XML_DIR" || rc=$?
 if [ "$rc" -eq 3 ]; then
-    echo "::error::build_xml_standalone.php cannot read ${MODULE_NAME} without a CMSMS runtime. Run the fallback workflow (release-cmsms-fallback.yml) for this tag." >&2
+    echo "::error::build_xml_standalone.php cannot read ${MODULE_NAME} without a CMSMS runtime, and this repo has no CMSMS fallback. Release aborted." >&2
     exit 3
 fi
 if [ "$rc" -eq 4 ]; then

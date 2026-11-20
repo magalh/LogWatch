@@ -7,7 +7,7 @@ name: Release CMSMS module
 #
 # The XML comes from scripts/build_xml_standalone.php, which reads the module classes directly.
 # No CMSMS core is downloaded and no database is needed.
-# Modules it cannot read (exit code 3) must be released with release-cmsms-fallback.yml instead.
+# Modules it cannot read (exit code 3) fail the release.
 #
 # Not triggered manually on purpose: a release always comes from a tag on main.
 
